@@ -1,8 +1,26 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+Future<void> main() async {
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+        options: FirebaseOptions(
+      apiKey: "AIzaSyDCl7Z9P99waSDvJiOJIHwyNFE9tmW3Ves",
+      appId: "1:997665717416:web:0c9c59e1da8609385ed69d",
+      messagingSenderId: "997665717416",
+      projectId: "rewear-d03a4",
+      storageBucket: "rewear-d03a4.appspot.com",
+    ));
+  } else {
+    await Firebase.initializeApp();
+  }
+  //WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
+// void main() {
+//   runApp(const MyApp());
+// }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -11,7 +29,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'ReWear',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -31,7 +49,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'ReWear'),
     );
   }
 }
