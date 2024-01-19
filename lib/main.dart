@@ -19,9 +19,8 @@ Future<void> main() async {
   } else {
     await Firebase.initializeApp();
   }
-
 }
- //void main() {
+//void main() {
 //   runApp(const MyApp());
 //}
 
@@ -35,7 +34,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'ReWear',
       theme: ThemeData(
-        useMaterial3: true, colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple).copyWith(background: const Color.fromRGBO(241, 239, 239,1)),
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple)
+            .copyWith(background: const Color.fromRGBO(241, 239, 239, 1)),
       ),
       home: const SignupScreen(),
     );
@@ -44,7 +45,6 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
 
   final String title;
 
