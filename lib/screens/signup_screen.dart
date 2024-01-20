@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:rewear/widgets/text_field_input.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:rewear/resources/authentication_metods.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -14,115 +14,132 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _surnameController = TextEditingController();
-  final TextEditingController _usernamewordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
 
   @override
   void dispose() {
-    super.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _nameController.dispose();
     _surnameController.dispose();
-    _usernamewordController.dispose();
+    _usernameController.dispose();
+    super.dispose();
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hintText,
+    required TextInputType textInputType,
+    bool isPass = false,
+  }) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        hintText: hintText,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+        contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      ),
+      keyboardType: textInputType,
+      obscureText: isPass,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          width: double.infinity,
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: size.width * 0.08),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Flexible(child: Container(), flex: 1,),
-              SvgPicture.asset('assets/ReWear-_2_.svg', height: 90),
-              const SizedBox(height: 20),
-              const Text('Креирај Профил',
+              SizedBox(height: size.height * 0.05),
+              SvgPicture.asset('assets/ReWear-_2_.svg',
+                  height: size.height * 0.1),
+              SizedBox(height: size.height * 0.02),
+              Text(
+                'Креирај Профил',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 40,
+                  fontSize: size.width * 0.1,
                   fontFamily: 'Helvetica',
-                  color: Color.fromRGBO(24, 29, 49,1),),),
-              const SizedBox(height: 50),
-              TextFieldInput(
+                  color: Color.fromRGBO(24, 29, 49, 1),
+                ),
+              ),
+              SizedBox(height: size.height * 0.05),
+              _buildTextField(
+                controller: _nameController,
                 hintText: 'Внеси име',
                 textInputType: TextInputType.text,
-                textEditingController: _passwordController,
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              TextFieldInput(
+              SizedBox(height: size.height * 0.02),
+              _buildTextField(
+                controller: _surnameController,
                 hintText: 'Внеси Презиме',
                 textInputType: TextInputType.text,
-                textEditingController: _surnameController,
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              TextFieldInput(
+              SizedBox(height: size.height * 0.02),
+              _buildTextField(
+                controller: _usernameController,
                 hintText: 'Внеси корисничко име',
                 textInputType: TextInputType.text,
-                textEditingController: _usernamewordController,
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              TextFieldInput(
+              SizedBox(height: size.height * 0.02),
+              _buildTextField(
+                controller: _emailController,
                 hintText: 'Внеси email',
                 textInputType: TextInputType.emailAddress,
-                textEditingController: _emailController,
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              TextFieldInput(
+              SizedBox(height: size.height * 0.02),
+              _buildTextField(
+                controller: _passwordController,
                 hintText: 'Внеси лозинка',
                 textInputType: TextInputType.text,
-                textEditingController: _passwordController,
                 isPass: true,
               ),
-              const SizedBox(
-                height: 20,
-              ),
-
+              SizedBox(height: size.height * 0.05),
               InkWell(
-                  child: Container(
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    decoration: const ShapeDecoration(shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(4),
-                      ),
+                onTap: () async {
+                  String res = await AuthenticationMetods().signUpUser(
+                      name: _nameController.text,
+                      surname: _surnameController.text,
+                      username: _usernameController.text,
+                      email: _emailController.text,
+                      password: _passwordController.text);
+                  print(res);
+                },
+                child: Container(
+                  width: double.infinity,
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.symmetric(vertical: size.height * 0.015),
+                  decoration: ShapeDecoration(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(4)),
                     ),
-                        color: Color.fromRGBO(24, 29, 49,1)                ),
-                    child: const Text('Креирај', style: TextStyle(color: Color.fromRGBO(241, 239, 239,1)),),
-                  )),
-              const SizedBox(
-                height: 50,
+                    color: Color.fromRGBO(24, 29, 49, 1),
+                  ),
+                  child: Text(
+                    'Креирај',
+                    style: TextStyle(color: Color.fromRGBO(241, 239, 239, 1)),
+                  ),
+                ),
               ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //     Container(
-              //       child: Text("Don't have an account?"),
-              //       padding: const EdgeInsets.symmetric(
-              //         vertical: 8,
-              //       ),
-              //     ),
-              //     GestureDetector(
-              //         onTap: (){},
-              //         child: Container(
-              //           child: Text("Sing up?", style: TextStyle( fontWeight: FontWeight.bold),),
-              //           padding: const EdgeInsets.symmetric(
-              //             vertical: 8,
-              //           ),
-              //         )
-              //     )
-              //   ],
-              // )
+              SizedBox(height: size.height * 0.05),
+              GestureDetector(
+                onTap: () {
+                  // TODO: Navigate to sign-in page
+                },
+                child: Text(
+                  "Веќе имаш профил? Најави се",
+                  style: TextStyle(
+                    decoration: TextDecoration.underline,
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
