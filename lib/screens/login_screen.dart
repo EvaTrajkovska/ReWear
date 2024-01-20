@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:rewear/resources/authentication_metods.dart';
 import 'package:rewear/widgets/text_field_input.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -12,87 +13,108 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
+  bool _isLoading = false;
   @override
   void dispose() {
-    super.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    super.dispose();
+  }
+
+  void loginUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+    String res = await AuthenticationMetods().loginUser(
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
+    if (res == "succes") {
+    } else {
+      //To do: implement exceptions
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Flexible(child: Container(), flex: 1,),
-              SvgPicture.asset('assets/ReWear-_2_.svg', height: 100),
-              const SizedBox(height: 40),
-              const Text('LOG IN',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 40,
-                  fontFamily: 'Helvetica',
-                  color: Color.fromRGBO(24, 29, 49,1),),),
-              const SizedBox(height: 80),
-              TextFieldInput(
-                hintText: 'Enter your email',
-                textInputType: TextInputType.emailAddress,
-                textEditingController: _emailController,
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              TextFieldInput(
-                hintText: 'Enter your password',
-                textInputType: TextInputType.text,
-                textEditingController: _passwordController,
-                isPass: true,
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-              InkWell(
-              child: Container(
-                width: double.infinity,
-                alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                decoration: const ShapeDecoration(shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(4),
+        child: SingleChildScrollView(
+          // Wrap content in SingleChildScrollView
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SvgPicture.asset('assets/ReWear-_2_.svg', height: 100),
+                SizedBox(height: 60),
+                Text(
+                  'LOG IN',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 40,
+                    fontFamily: 'Helvetica',
+                    color: Color.fromRGBO(24, 29, 49, 1),
                   ),
                 ),
-                    color: Color.fromRGBO(24, 29, 49,1)                ),
-                child: const Text('Log in', style: TextStyle(color: Color.fromRGBO(241, 239, 239,1)),),
-              )),
-              const SizedBox(
-                height: 100,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    child: Text("Don't have an account?"),
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 8,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: (){},
+                SizedBox(height: 80),
+                TextFieldInput(
+                  hintText: 'Enter your email',
+                  textInputType: TextInputType.emailAddress,
+                  textEditingController: _emailController,
+                ),
+                SizedBox(height: 24),
+                TextFieldInput(
+                  hintText: 'Enter your password',
+                  textInputType: TextInputType.text,
+                  textEditingController: _passwordController,
+                  isPass: true,
+                ),
+                SizedBox(height: 50),
+                InkWell(
+                  onTap: loginUser,
                   child: Container(
-                    child: Text("Sing up?", style: TextStyle( fontWeight: FontWeight.bold),),
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 8,
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: const ShapeDecoration(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(4)),
+                      ),
+                      color: Color.fromRGBO(24, 29, 49, 1),
                     ),
-                  )
-                  )
-                ],
-              )
-            ],
+                    child: _isLoading
+                        ? const CircularProgressIndicator(
+                            color: Colors.white,
+                          )
+                        : const Text(
+                            'Log in',
+                            style: TextStyle(
+                                color: Color.fromRGBO(241, 239, 239, 1)),
+                          ),
+                  ),
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Don't have an account?"),
+                    GestureDetector(
+                      onTap: () {
+                        // navigation
+                      },
+                      child: Text("Sign up?",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+              ],
+            ),
           ),
         ),
       ),
