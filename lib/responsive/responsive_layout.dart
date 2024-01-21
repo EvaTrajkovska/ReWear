@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rewear/providers/user_provider.dart';
 import 'package:rewear/utils/dimensions.dart';
+
 class ResponsiveLayout extends StatefulWidget {
   final Widget webScreenLayout;
   final Widget mobileScreenLayout;
-  const ResponsiveLayout ({Key? key, required this.webScreenLayout, required this.mobileScreenLayout}) : super(key: key);
+  const ResponsiveLayout(
+      {Key? key,
+      required this.webScreenLayout,
+      required this.mobileScreenLayout})
+      : super(key: key);
 
   @override
   State<ResponsiveLayout> createState() => _ResponsiveLayoutState();
@@ -20,7 +25,7 @@ class _ResponsiveLayoutState extends State<ResponsiveLayout> {
 
   addData() async {
     UserProvider userProvider =
-    Provider.of<UserProvider>(context, listen: false);
+        Provider.of<UserProvider>(context, listen: false);
     await userProvider.refreshUser();
   }
 

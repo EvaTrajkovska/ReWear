@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:rewear/providers/user_provider.dart';
 import 'package:rewear/responsive/mobile_screen_layout.dart';
 import 'package:rewear/responsive/web_screen_layout.dart';
+import 'package:rewear/screens/add_post_screen.dart';
 import 'package:rewear/screens/login_screen.dart';
 import 'package:rewear/screens/signup_screen.dart';
 import 'package:rewear/responsive/responsive_layout.dart';
@@ -28,7 +29,6 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -37,43 +37,43 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => UserProvider(),)
+          ChangeNotifierProvider(
+            create: (_) => UserProvider(),
+          )
         ],
-      child: MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'ReWear',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple)
-            .copyWith(background: const Color.fromRGBO(241, 239, 239, 1)),
-      ),
-      home: StreamBuilder(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot){
-          if(snapshot.connectionState == ConnectionState.active){
-            if(snapshot.hasData){
-              return ResponsiveLayout(
-                mobileScreenLayout: MobileScreenLayout(),
-                webScreenLayout: WebScreenLayout(),
-              );
-            }
-            else if (snapshot.hasError) {
-              return Center(
-                child: Text('${snapshot.error}'),
-              );
-            }
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(
-                color: primaryColor,
-              ),
-            );
-          }
-          return const LoginScreen();
-        },
-      ),
-    )
-    );
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'ReWear',
+          theme: ThemeData(
+            useMaterial3: true,
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple)
+                .copyWith(background: const Color.fromRGBO(241, 239, 239, 1)),
+          ),
+          home: StreamBuilder(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.active) {
+                if (snapshot.hasData) {
+                  return ResponsiveLayout(
+                    mobileScreenLayout: MobileScreenLayout(),
+                    webScreenLayout: WebScreenLayout(),
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text('${snapshot.error}'),
+                  );
+                }
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: primaryColor,
+                  ),
+                );
+              }
+              return const LoginScreen();
+            },
+          ),
+        ));
   }
 }
