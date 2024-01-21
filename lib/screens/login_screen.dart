@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rewear/resources/authentication_metods.dart';
+import 'package:rewear/responsive/mobile_screen_layout.dart';
+import 'package:rewear/responsive/responsive_layout.dart';
+import 'package:rewear/responsive/web_screen_layout.dart';
+import 'package:rewear/screens/signup_screen.dart';
 import 'package:rewear/widgets/text_field_input.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -30,13 +34,29 @@ class _LoginScreenState extends State<LoginScreen> {
       password: _passwordController.text,
     );
     if (res == "succes") {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+            builder: (context) => const ResponsiveLayout(
+              mobileScreenLayout: MobileScreenLayout(),
+              webScreenLayout: WebScreenLayout(),
+            )
+        ),
+      );
     } else {
       //To do: implement exceptions
       setState(() {
         _isLoading = false;
       });
     }
+
   }
+ void navigateToSignup() async{
+    await Navigator.of(context).push(
+        MaterialPageRoute(
+            builder: (context) => const SignupScreen(),
+    ),
+   );
+ }
 
   @override
   Widget build(BuildContext context) {
@@ -104,9 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     Text("Don't have an account?"),
                     GestureDetector(
-                      onTap: () {
-                        // navigation
-                      },
+                      onTap: navigateToSignup,
                       child: Text("Sign up?",
                           style: TextStyle(fontWeight: FontWeight.bold)),
                     ),

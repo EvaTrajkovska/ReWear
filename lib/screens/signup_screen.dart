@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rewear/resources/authentication_metods.dart';
+import 'package:rewear/responsive/mobile_screen_layout.dart';
+import 'package:rewear/responsive/responsive_layout.dart';
+import 'package:rewear/responsive/web_screen_layout.dart';
+import 'package:rewear/screens/login_screen.dart';
+import 'package:rewear/utils/image_picker.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -15,6 +20,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _surnameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -43,6 +49,45 @@ class _SignupScreenState extends State<SignupScreen> {
       obscureText: isPass,
     );
   }
+
+  void signUpUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    String res = await AuthenticationMetods().signUpUser(
+        name: _nameController.text,
+        surname: _surnameController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
+        username: _usernameController.text);
+
+
+      setState(() {
+        _isLoading = false;
+      });
+      if (res != "succes"){
+        showSnackBar(context, res);
+      }else{
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+              builder: (context) => const ResponsiveLayout(
+              mobileScreenLayout: MobileScreenLayout(),
+                webScreenLayout: WebScreenLayout(),
+    ),
+        ),
+        );
+      }
+    }
+
+      void navigateToLogin() {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const LoginScreen(),
+          ),
+        );
+      }
+
 
   @override
   Widget build(BuildContext context) {
@@ -101,15 +146,7 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               SizedBox(height: size.height * 0.05),
               InkWell(
-                onTap: () async {
-                  String res = await AuthenticationMetods().signUpUser(
-                      name: _nameController.text,
-                      surname: _surnameController.text,
-                      username: _usernameController.text,
-                      email: _emailController.text,
-                      password: _passwordController.text);
-                  print(res);
-                },
+                onTap: signUpUser,
                 child: Container(
                   width: double.infinity,
                   alignment: Alignment.center,
@@ -128,9 +165,11 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               SizedBox(height: size.height * 0.05),
               GestureDetector(
-                onTap: () {
-                  // TODO: Navigate to sign-in page
-                },
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const LoginScreen(),
+                  ),
+                ),
                 child: Text(
                   "Веќе имаш профил? Најави се",
                   style: TextStyle(
