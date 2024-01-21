@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
+import 'package:rewear/providers/user_provider.dart';
 import 'package:rewear/responsive/mobile_screen_layout.dart';
 import 'package:rewear/responsive/web_screen_layout.dart';
 import 'package:rewear/screens/login_screen.dart';
@@ -33,7 +35,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => UserProvider(),)
+        ],
+      child: MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'ReWear',
       theme: ThemeData(
@@ -67,6 +73,7 @@ class MyApp extends StatelessWidget {
           return const LoginScreen();
         },
       ),
+    )
     );
   }
 }
