@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:rewear/model/user.dart' as model;
 
 class AuthenticationMetods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -30,18 +31,19 @@ class AuthenticationMetods {
         print(cred.user!.uid);
 
         // add user in database
-        await _firestore.collection("users").doc(cred.user!.uid).set({
-          'name': name,
-          'surname': surname,
-          'username': username,
-          'email': email,
-          'password': password,
-          'uid': cred.user!.uid,
-          'rating': [],
-          'likes': [],
-          'following': [],
-          'followers': []
-        });
+        model.User user = model.User(
+            name: name,
+            surname: surname,
+            username: username,
+            email: email,
+            password: password,
+            uid: cred.user!.uid,
+            rating: [],
+            likes: [],
+            following: [],
+            followers: []
+        );
+        await _firestore.collection("users").doc(cred.user!.uid).set(user.toJson());
 
         res = "success";
         print(res);

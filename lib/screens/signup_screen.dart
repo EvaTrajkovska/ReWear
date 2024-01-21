@@ -62,16 +62,15 @@ class _SignupScreenState extends State<SignupScreen> {
         password: _passwordController.text,
         username: _usernameController.text);
 
-
-      setState(() {
-        _isLoading = false;
-      });
       if (res != "succes"){
         showSnackBar(context, res);
+        setState(() {
+          _isLoading = false;
+        });
       }else{
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-              builder: (context) => const ResponsiveLayout(
+              builder: (context) => ResponsiveLayout(
               mobileScreenLayout: MobileScreenLayout(),
                 webScreenLayout: WebScreenLayout(),
     ),
