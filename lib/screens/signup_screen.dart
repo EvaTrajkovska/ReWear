@@ -5,7 +5,7 @@ import 'package:rewear/responsive/mobile_screen_layout.dart';
 import 'package:rewear/responsive/responsive_layout.dart';
 import 'package:rewear/responsive/web_screen_layout.dart';
 import 'package:rewear/screens/login_screen.dart';
-import 'package:rewear/utils/image_picker.dart';
+import 'package:rewear/utils/imagePickerAndSnackBar.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -62,31 +62,30 @@ class _SignupScreenState extends State<SignupScreen> {
         password: _passwordController.text,
         username: _usernameController.text);
 
-      if (res != "succes"){
-        showSnackBar(context, res);
-        setState(() {
-          _isLoading = false;
-        });
-      }else{
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-              builder: (context) => ResponsiveLayout(
-              mobileScreenLayout: MobileScreenLayout(),
-                webScreenLayout: WebScreenLayout(),
-    ),
-        ),
-        );
-      }
-    }
-
-      void navigateToLogin() {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const LoginScreen(),
+    if (res != "succes") {
+      showSnackBar(context, res);
+      setState(() {
+        _isLoading = false;
+      });
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => ResponsiveLayout(
+            mobileScreenLayout: MobileScreenLayout(),
+            webScreenLayout: WebScreenLayout(),
           ),
-        );
-      }
+        ),
+      );
+    }
+  }
 
+  void navigateToLogin() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const LoginScreen(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

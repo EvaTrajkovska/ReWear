@@ -68,14 +68,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
           controller: pageController,
           onPageChanged: onPageChanged,
           physics: NeverScrollableScrollPhysics(),
-          children: [
-            Text('feed/home'),
-            Text('messages'),
-            Text('add post'),
-            Text('saved'),
-            Text('notifications'),
-            Text('profile'),
-          ],
+          children: homeScreenItems,
         ),
         bottomNavigationBar: CupertinoTabBar(
           backgroundColor: secondaryColor,

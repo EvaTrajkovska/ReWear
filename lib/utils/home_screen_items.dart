@@ -4,8 +4,7 @@ import 'package:rewear/screens/add_post_screen.dart';
 const homeScreenItems = [
   Text('feed/home'),
   Text('messages'),
-  // AddPostScreen(),
-  Text('add post'),
+  AddPostScreen(),
   Text('saved'),
   Text('notifications'),
   Text('profile')
