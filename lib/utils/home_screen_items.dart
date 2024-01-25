@@ -10,5 +10,7 @@ final homeScreenItems = [
   AddPostScreen(),
   Text('saved'),
   Text('notifications'),
-  ProfileScreen(),
+  ProfileScreen(
+    uid: FirebaseAuth.instance.currentUser!.uid,
+  ),
 ];
