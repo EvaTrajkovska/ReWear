@@ -13,10 +13,10 @@ class UserProfileHeader extends StatelessWidget {
       children: [
         CircleAvatar(
           backgroundColor:
-              const Color.fromARGB(255, 1, 25, 45), // Use your preferred color
+              const Color.fromARGB(255, 1, 25, 45),
           child: Text(initial, style: TextStyle(color: Colors.white)),
         ),
-        SizedBox(width: 8), // Adjust spacing as needed
+        SizedBox(width: 10),
         Text(username, style: TextStyle(fontSize: 20)),
       ],
     );

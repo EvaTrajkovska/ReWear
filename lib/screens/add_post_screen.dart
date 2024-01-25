@@ -76,7 +76,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Enter description"),
+          title: Text("Внеси опис"),
           content: TextField(
             controller: _descriptionController,
           ),
@@ -93,7 +93,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
             ),
             SimpleDialogOption(
               padding: const EdgeInsets.all(20),
-              child: const Text("Cancel"),
+              child: const Text("Откажи"),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -115,12 +115,12 @@ class _AddPostScreenState extends State<AddPostScreen> {
             padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
             child: Dialog(
               child: AlertDialog(
-                title: Text("Enter Title"),
+                title: Text("Внеси наслов"),
                 content: SingleChildScrollView(
                   child: TextField(
                     controller: _titleController,
                     decoration: InputDecoration(
-                      hintText: 'Type your title here',
+                      hintText: 'Внеси го твојот наслов тука',
                     ),
                   ),
                 ),
@@ -135,7 +135,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                     },
                   ),
                   TextButton(
-                    child: Text("Cancel"),
+                    child: Text("Откажи"),
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -158,7 +158,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
           children: <Widget>[
             SimpleDialogOption(
                 padding: const EdgeInsets.all(20),
-                child: const Text('Take a photo'),
+                child: const Text('Употреби камера'),
                 onPressed: () async {
                   Navigator.pop(context);
                   Uint8List file = await pickImage(ImageSource.camera);
@@ -168,7 +168,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 }),
             SimpleDialogOption(
                 padding: const EdgeInsets.all(20),
-                child: const Text('Choose from Gallery'),
+                child: const Text('Избери слика од галерија'),
                 onPressed: () async {
                   Navigator.of(context).pop();
                   Uint8List file = await pickImage(ImageSource.gallery);
@@ -178,7 +178,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 }),
             SimpleDialogOption(
               padding: const EdgeInsets.all(20),
-              child: const Text("Cancel"),
+              child: const Text("Откажи"),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -217,8 +217,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const Divider(height: 15,thickness: 2,),
             UserProfileHeader(username: username),
-            const Divider(),
+            const Divider(height: 15,thickness: 2,),
+            SizedBox(height: 15,),
             _file == null
                 ? Padding(
                     padding: EdgeInsets.symmetric(vertical: 16),
@@ -226,8 +228,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       icon: Icon(Icons.add),
                       label: Text('Додај Слика'),
                       style: ElevatedButton.styleFrom(
-                        primary: Color.fromARGB(255, 7, 139, 86),
-                        onPrimary: Color.fromARGB(255, 1, 68, 41),
+                        backgroundColor: greenColor,
+                        foregroundColor:secondaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
@@ -247,8 +249,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       icon: Icon(Icons.check),
                       label: Text(''),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
+                        backgroundColor: greenColor,
+                        foregroundColor:secondaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
@@ -270,8 +272,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       icon: Icon(Icons.add),
                       label: Text('Додај наслов'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 7, 139, 86),
-                        foregroundColor: Color.fromARGB(255, 1, 68, 41),
+                        backgroundColor: greenColor,
+                        foregroundColor:secondaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
@@ -291,8 +293,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       icon: Icon(Icons.check),
                       label: Text(''),
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.green,
-                        onPrimary: Colors.white,
+                        backgroundColor: greenColor,
+                        foregroundColor:secondaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
@@ -314,8 +316,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       icon: Icon(Icons.add),
                       label: Text('Додај опис'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 7, 139, 86),
-                        foregroundColor: Color.fromARGB(255, 1, 68, 41),
+                        backgroundColor: greenColor,
+                        foregroundColor:secondaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
@@ -335,8 +337,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       icon: Icon(Icons.check),
                       label: Text(''),
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.green,
-                        onPrimary: Colors.white,
+                        backgroundColor: greenColor,
+                        foregroundColor:secondaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
@@ -355,11 +357,11 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 ? Padding(
                     padding: EdgeInsets.symmetric(vertical: 16),
                     child: ElevatedButton.icon(
-                      icon: Icon(Icons.add),
                       label: Text('Додај цена'),
+                      icon: Icon(Icons.add),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 7, 139, 86),
-                        foregroundColor: Color.fromARGB(255, 1, 68, 41),
+                        backgroundColor: greenColor,
+                        foregroundColor:secondaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
@@ -379,8 +381,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       icon: Icon(Icons.check),
                       label: Text(''),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
+                        backgroundColor: greenColor,
+                        foregroundColor:secondaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
@@ -400,7 +402,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
               child: ElevatedButton(
                 child: Text('Објави оглас'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 60, 119, 255),
+                  backgroundColor: blueColor,
                   foregroundColor: Colors.white,
                   padding: EdgeInsets.symmetric(horizontal: 70, vertical: 20),
                   textStyle: TextStyle(
