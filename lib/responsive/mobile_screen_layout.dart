@@ -67,7 +67,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
         body: PageView(
           controller: pageController,
           onPageChanged: onPageChanged,
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           children: homeScreenItems,
         ),
         bottomNavigationBar: CupertinoTabBar(
@@ -82,7 +82,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
               icon: Icon(Icons.message_outlined,
                   color: _page == 1 ? blueGrey : warmGrey),
               //label: '',
-              backgroundColor: warmGrey,
+              backgroundColor: blueGrey,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.add_circle_outline,

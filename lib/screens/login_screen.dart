@@ -5,6 +5,7 @@ import 'package:rewear/responsive/mobile_screen_layout.dart';
 import 'package:rewear/responsive/responsive_layout.dart';
 import 'package:rewear/responsive/web_screen_layout.dart';
 import 'package:rewear/screens/signup_screen.dart';
+import 'package:rewear/utils/dimensions.dart';
 import 'package:rewear/widgets/text_field_input.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -65,7 +66,9 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SingleChildScrollView(
           // Wrap content in SingleChildScrollView
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
+            padding: MediaQuery.of(context).size.width> webScreenSize?
+            EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width/3):
+            const EdgeInsets.symmetric(horizontal: 40),
             width: double.infinity,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,

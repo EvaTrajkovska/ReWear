@@ -20,9 +20,8 @@ class _FeedScreenState extends State<FeedScreen> {
 
     return Scaffold(
       backgroundColor:
-          width > webScreenSize ? webBackgroundColor : mobileBackgroundColor,
-      appBar: width > webScreenSize
-          ? null
+          width > webScreenSize ? coolGrey : mobileBackgroundColor,
+      appBar: width > webScreenSize ? null
           : AppBar(
               backgroundColor: Color.fromARGB(0, 245, 234, 234),
               title: SvgPicture.asset(
@@ -58,7 +57,7 @@ class _FeedScreenState extends State<FeedScreen> {
             itemBuilder: (ctx, index) => Container(
               margin: EdgeInsets.symmetric(
                 horizontal: width > webScreenSize ? width * 0.3 : 0,
-                vertical: width > webScreenSize ? 15 : 0,
+                vertical: width > webScreenSize ? 10 : 0,
               ),
               child: PostCard(
                 snap: snapshot.data!.docs[index].data(),

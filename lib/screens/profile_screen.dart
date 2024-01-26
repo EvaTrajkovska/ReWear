@@ -10,6 +10,7 @@ import 'package:rewear/utils/colors.dart';
 import 'package:rewear/model/user.dart' as model;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:rewear/utils/dimensions.dart';
 import 'package:rewear/widgets/rate_button.dart';
 import '../utils/imagePickerAndSnackBar.dart';
 import 'package:rewear/resources/database_method.dart';
@@ -185,6 +186,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   double averageRating = 0;
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     averageRating = calculateAverageRating(userData['ratings'] as List? ?? []);
 
     List<Widget> buildStarIcons(double averageRating) {
@@ -228,8 +230,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           )
         : Scaffold(
             resizeToAvoidBottomInset: true,
-            appBar: AppBar(
-              backgroundColor: Colors.white,
+            appBar:width > webScreenSize ? null
+                : AppBar(
+              backgroundColor: coolGrey,
               title: SvgPicture.asset(
                 'assets/ReWear.svg',
                 height: 100,
@@ -257,11 +260,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         CircleAvatar(
-                          backgroundColor: const Color.fromARGB(255, 1, 25, 45),
-                          radius: 50.0,
+                          backgroundColor: blueGrey,
+                          radius: 70.0,
                           child: Text(
                             initial,
-                            style: TextStyle(fontSize: 30, color: Colors.white),
+                            style: TextStyle(fontSize: 40, color: Colors.white),
                           ),
                         ),
                         Expanded(
@@ -300,6 +303,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                   ),
+                  SizedBox(height: 20,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [

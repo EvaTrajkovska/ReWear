@@ -11,6 +11,7 @@ import 'package:rewear/resources/database_method.dart';
 import 'package:rewear/screens/home_screen.dart';
 import 'package:rewear/screens/login_screen.dart';
 import 'package:rewear/utils/colors.dart';
+import 'package:rewear/utils/dimensions.dart';
 import 'package:rewear/utils/imagePickerAndSnackBar.dart';
 import 'package:rewear/widgets/user_profile_header.dart';
 
@@ -202,10 +203,12 @@ class _AddPostScreenState extends State<AddPostScreen> {
     final userProvider = Provider.of<UserProvider>(context);
     final User user = userProvider.getUser;
     String username = user.username ?? 'No Name';
+    final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: AppBar(
+      appBar: width > webScreenSize ? null
+      :AppBar(
         backgroundColor: Color.fromARGB(0, 245, 234, 234),
         title: SvgPicture.asset(
           'assets/ReWear.svg',

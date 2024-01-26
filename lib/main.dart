@@ -46,8 +46,8 @@ class MyApp extends StatelessWidget {
           title: 'ReWear',
           theme: ThemeData(
             useMaterial3: true,
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple)
-                .copyWith(background: const Color.fromRGBO(241, 239, 239, 1)),
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey)
+                .copyWith(background: coolGrey),
           ),
           home: StreamBuilder(
             stream: FirebaseAuth.instance.authStateChanges(),
