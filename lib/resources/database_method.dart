@@ -12,7 +12,7 @@ class FireStoreMethods {
     String res = "Some error occurred";
     try {
       String photoUrl =
-      await StorageMethods().uploadImageToStorage('posts', file);
+          await StorageMethods().uploadImageToStorage('posts', file);
       String postId = const Uuid().v1();
       Post post = Post(
         title: title,
@@ -54,8 +54,8 @@ class FireStoreMethods {
     return res;
   }
 
-  Future<String> postComment(String postId, String text, String uid,
-      String name) async {
+  Future<String> postComment(
+      String postId, String text, String uid, String name) async {
     String res = "Some error occurred";
     try {
       if (text.isNotEmpty) {
@@ -95,4 +95,25 @@ class FireStoreMethods {
     return res;
   }
 
+  //Add rating
+  Future<String> addRating(
+      String raterUid, String ratedUid, int ratingValue) async {
+    String res = "Some error occurred";
+    try {
+      Map<String, dynamic> rating = {
+        'raterUid': raterUid,
+        'rating': ratingValue,
+      };
+
+      // Add the rating to the 'ratings' array of the rated user
+      await _firestore.collection('users').doc(ratedUid).update({
+        'ratings': FieldValue.arrayUnion([rating])
+      });
+
+      res = 'success';
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
 }

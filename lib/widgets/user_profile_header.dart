@@ -12,8 +12,7 @@ class UserProfileHeader extends StatelessWidget {
       //  mainAxisSize: MainAxisSize.min,
       children: [
         CircleAvatar(
-          backgroundColor:
-              const Color.fromARGB(255, 1, 25, 45),
+          backgroundColor: const Color.fromARGB(255, 1, 25, 45),
           child: Text(initial, style: TextStyle(color: Colors.white)),
         ),
         SizedBox(width: 10),

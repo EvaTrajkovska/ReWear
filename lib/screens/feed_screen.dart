@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:rewear/screens/search_screen.dart';
 import 'package:rewear/utils/colors.dart';
 import 'package:rewear/utils/dimensions.dart';
 import 'package:rewear/widgets/post_card.dart';
@@ -11,6 +12,7 @@ class FeedScreen extends StatefulWidget {
   @override
   State<FeedScreen> createState() => _FeedScreenState();
 }
+
 class _FeedScreenState extends State<FeedScreen> {
   @override
   Widget build(BuildContext context) {
@@ -18,25 +20,30 @@ class _FeedScreenState extends State<FeedScreen> {
 
     return Scaffold(
       backgroundColor:
-      width > webScreenSize ? webBackgroundColor : mobileBackgroundColor,
+          width > webScreenSize ? webBackgroundColor : mobileBackgroundColor,
       appBar: width > webScreenSize
           ? null
           : AppBar(
-        backgroundColor: Color.fromARGB(0, 245, 234, 234),
-        title: SvgPicture.asset(
-          'assets/ReWear.svg',
-          height: 100,
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.messenger_outline,
-              color: primaryColor,
+              backgroundColor: Color.fromARGB(0, 245, 234, 234),
+              title: SvgPicture.asset(
+                'assets/ReWear.svg',
+                height: 100,
+              ),
+              actions: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.search,
+                    color: primaryColor,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SearchScreen()),
+                    );
+                  },
+                ),
+              ],
             ),
-            onPressed: () {},
-          ),
-        ],
-      ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('posts').snapshots(),
         builder: (context,
@@ -61,5 +68,5 @@ class _FeedScreenState extends State<FeedScreen> {
         },
       ),
     );
-}
+  }
 }

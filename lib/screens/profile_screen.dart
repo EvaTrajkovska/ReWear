@@ -3,16 +3,16 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:rewear/providers/user_provider.dart';
 import 'package:rewear/resources/authentication_metods.dart';
-//import 'package:rewear/resources/firestore_methods.dart';
 import 'package:rewear/screens/login_screen.dart';
 import 'package:rewear/utils/colors.dart';
-//import 'package:rewear/widgets/follow_button.dart';
 import 'package:rewear/resources/database_method.dart';
 import 'package:rewear/utils/colors.dart';
 import 'package:rewear/model/user.dart' as model;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:rewear/widgets/rate_button.dart';
 import '../utils/imagePickerAndSnackBar.dart';
+import 'package:rewear/resources/database_method.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String uid;
@@ -30,6 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int ratingUsers = 0;
   bool isFollowing = false;
   bool isLoading = false;
+  String ratedUid = '';
 
   @override
   void initState() {
@@ -57,6 +58,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       setState(() {
         isLoading = true;
+        averageRating = calculateAverageRating(userData['ratings'] ?? []);
       });
     } catch (e) {
       showSnackBar(
@@ -69,8 +71,146 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
+  double calculateAverageRating(List<dynamic> ratings) {
+    if (ratings.isEmpty) return 0.0;
+
+    double totalRating = 0.0;
+    for (var ratingMap in ratings) {
+      totalRating += ratingMap['rating'];
+    }
+    return totalRating / ratings.length;
+  }
+
+  void showRaters(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Raters'),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: userData['ratings']?.length ?? 0,
+              itemBuilder: (context, index) {
+                var rater = userData['ratings'][index];
+                return ListTile(
+                  title: FutureBuilder<DocumentSnapshot>(
+                    future: FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(rater['raterUid'])
+                        .get(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done &&
+                          snapshot.data != null) {
+                        var raterData =
+                            snapshot.data!.data() as Map<String, dynamic>;
+                        return Text(raterData['username'] ?? 'Unknown User');
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return CircularProgressIndicator();
+                      }
+                    },
+                  ),
+                  trailing: Text('${rater['rating']} Stars'),
+                );
+              },
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showRatingDialog(BuildContext context) {
+    final firestoreMethods = FireStoreMethods();
+    int selectedRating = 0;
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Оцени продавач!'),
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: List.generate(5, (index) {
+              return IconButton(
+                icon: Icon(
+                  selectedRating > index ? Icons.star : Icons.star_border,
+                  color: selectedRating > index ? greenColor : Colors.grey,
+                ),
+                onPressed: () {
+                  String ratedUid = widget.uid;
+
+                  Navigator.of(context).pop(index + 1);
+                },
+              );
+            }),
+          ),
+        );
+      },
+    ).then((rating) async {
+      if (rating != null) {
+        String raterUid = FirebaseAuth.instance.currentUser?.uid ?? '';
+        String ratedUid = widget.uid;
+
+        String result =
+            await FireStoreMethods().addRating(raterUid, ratedUid, rating);
+
+        if (result == 'success') {
+          setState(() {
+            List<dynamic> updatedRatingsList =
+                List.from(userData['ratings'] ?? []);
+            updatedRatingsList.add({'raterUid': raterUid, 'rating': rating});
+
+            userData['ratings'] = updatedRatingsList;
+
+            averageRating = calculateAverageRating(updatedRatingsList);
+          });
+        } else {
+          result = 'rating fai';
+        }
+      }
+    });
+  }
+
+  double averageRating = 0;
   @override
   Widget build(BuildContext context) {
+    averageRating = calculateAverageRating(userData['ratings'] as List? ?? []);
+
+    List<Widget> buildStarIcons(double averageRating) {
+      List<Widget> starIcons = [];
+      int fullStars = averageRating.floor();
+      bool hasHalfStar = (averageRating - fullStars) >= 0.5;
+
+      for (int i = 0; i < fullStars; i++) {
+        starIcons.add(Icon(Icons.star, color: greenColor));
+      }
+
+      if (hasHalfStar) {
+        starIcons.add(Icon(Icons.star_half, color: greenColor));
+      }
+
+      for (int i = fullStars + (hasHalfStar ? 1 : 0); i < 5; i++) {
+        starIcons.add(Icon(Icons.star_border, color: greenColor));
+      }
+
+      return starIcons;
+    }
+
+    // print('Total Rating: $totalRating');
+    // print('Number of Ratings: $numberOfRatings');
+    print('Average Rating: $averageRating');
+
     String username = userData["username"] ?? 'No Name';
     String initial = userData["username"] != null
         ? userData["username"][0].toUpperCase()
@@ -98,7 +238,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             body: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  Divider(), // Divider below the AppBar
+                  Divider(),
                   Padding(
                     padding: const EdgeInsets.only(left: 16.0, top: 8.0),
                     child: Text(
@@ -109,7 +249,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                   ),
-                  Divider(), // Divider below the username
+                  Divider(),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16.0, vertical: 8.0),
@@ -134,7 +274,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   textAlign: TextAlign.center,
                                 ),
                                 subtitle: Text(
-                                  ratingCount, // TODO change this
+                                  ratingCount,
                                   style: TextStyle(
                                     fontSize: 30,
                                   ),
@@ -150,16 +290,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   textAlign: TextAlign.center,
                                 ),
                                 subtitle: Row(
-                                  // TODO change this
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: List.generate(5, (index) {
-                                    return Icon(
-                                      index < 4
-                                          ? Icons.star
-                                          : Icons.star_border,
-                                      color: greenColor,
-                                    );
-                                  }),
+                                  children: buildStarIcons(averageRating),
                                 ),
                               ),
                             ],
@@ -168,27 +300,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                   ),
-                  //TODO make a dynamic button that changes depending of who is watching
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Container(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // TODO: handle button press
-                        },
-                        child: Text('Види оцени'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: greenColor,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                          ),
-                        ),
-                      ),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      FirebaseAuth.instance.currentUser!.uid == widget.uid
+                          ? RateButton(
+                              text: 'Види оцени',
+                              function: () async {
+                                showRaters(context);
+                              },
+                            )
+                          : RateButton(
+                              text: 'Оцени',
+                              function: () async {
+                                showRatingDialog(context);
+                              },
+                            )
+                    ],
                   ),
-
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      FirebaseAuth.instance.currentUser!.uid == widget.uid
+                          ? RateButton(
+                              text: 'Одјави се',
+                              function: () async {
+                                await AuthenticationMetods().signOut();
+                                if (context.mounted) {
+                                  Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                      builder: (context) => const LoginScreen(),
+                                    ),
+                                  );
+                                }
+                              },
+                            )
+                          : RateButton(
+                              text: 'Контактирај продавач',
+                              function: () async {
+                                // TODO: messages
+                              },
+                            ),
+                    ],
+                  ),
                   Divider(),
                   FutureBuilder(
                     future: FirebaseFirestore.instance
