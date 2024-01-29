@@ -30,11 +30,14 @@ environment:
 dependencies:
   cloud_firestore: ^4.14.0
   cupertino_icons: ^1.0.2
+  firebase_analytics: ^10.8.0
   firebase_auth: ^4.16.0
   firebase_core: ^2.24.2
+  firebase_messaging: ^14.7.10
   firebase_storage: ^11.6.0
   flutter:
     sdk: flutter
+  flutter_local_notifications: ^16.3.2
   flutter_svg: ^2.0.9
   image_picker: ^1.0.7
   intl: ^0.19.0

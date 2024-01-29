@@ -1,9 +1,13 @@
 import 'dart:typed_data';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:rewear/service/firebase_firestore_service.dart';
+import 'package:rewear/service/notification_service.dart';
 import 'package:rewear/utils/colors.dart';
 
-import '../../service/firebase_firestore_service.dart';
-import '../../service/media_service.dart';
+import 'package:rewear/service/firebase_storage_service.dart';
+import 'package:rewear/service/media_service.dart';
+
 import 'custom_text_form_field.dart';
 
 class ChatTextField extends StatefulWidget {
@@ -17,13 +21,13 @@ class ChatTextField extends StatefulWidget {
 
 class _ChatTextFieldState extends State<ChatTextField> {
   final controller = TextEditingController();
-  //final notificationsService = NotificationsService();
+  final notificationsService = NotificationsService();
 
   Uint8List? file;
 
   @override
   void initState() {
-    //  notificationsService.getReceiverToken(widget.receiverId);
+    notificationsService.getReceiverToken(widget.receiverId);
     super.initState();
   }
 
@@ -69,10 +73,10 @@ class _ChatTextFieldState extends State<ChatTextField> {
         receiverId: widget.receiverId,
         content: controller.text,
       );
-      // await notificationsService.sendNotification(
-      //   body: controller.text,
-      //   senderId: FirebaseAuth.instance.currentUser!.uid,
-      // );
+       await notificationsService.sendNotification(
+         body: controller.text,
+        senderId: FirebaseAuth.instance.currentUser!.uid,
+       );
       controller.clear();
       FocusScope.of(context).unfocus();
     }
@@ -87,10 +91,10 @@ class _ChatTextFieldState extends State<ChatTextField> {
         receiverId: widget.receiverId,
         file: file!,
       );
-      // await notificationsService.sendNotification(
-      //   body: 'image........',
-      //   senderId: FirebaseAuth.instance.currentUser!.uid,
-      // );
+      await notificationsService.sendNotification(
+        body: 'image........',
+        senderId: FirebaseAuth.instance.currentUser!.uid,
+      );
     }
   }
 }

@@ -5,7 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:rewear/model/user.dart' as UserModel;
 import 'package:rewear/screens/user_item.dart';
 import 'package:rewear/service/firebase_firestore_service.dart';
+import 'package:rewear/service/notification_service.dart';
 import 'package:rewear/utils/colors.dart';
+import 'package:rewear/utils/dimensions.dart';
 
 import '../providers/firebase_provider.dart';
 
@@ -17,12 +19,13 @@ class ChatsScreen extends StatefulWidget {
 }
 
 class _ChatsScreenState extends State<ChatsScreen> {
-  // with WidgetsBindingObserver
-  // final notificationService = NotificationsService();
+ // with WidgetsBindingObserver
+   final notificationService = NotificationsService();
   @override
   void initState() {
     super.initState();
     Provider.of<FirebaseProvider>(context, listen: false).getAllUsers();
+    notificationService.firebaseNotification(context);
   }
 
   // @override
@@ -53,8 +56,11 @@ class _ChatsScreenState extends State<ChatsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
-      appBar: AppBar(
+      resizeToAvoidBottomInset: true,
+      appBar: width > webScreenSize ? null : AppBar(
         backgroundColor: coolGrey,
         title: SvgPicture.asset(
           'assets/ReWear.svg',
@@ -69,7 +75,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
           physics: const BouncingScrollPhysics(),
           itemBuilder: (context, index) =>
               value.users[index].uid != FirebaseAuth.instance.currentUser?.uid
-                  ? UserItem(user: value.users[index])
+                  ? UserItem(user: value.users[index],)
                   : const SizedBox(),
         );
       }),

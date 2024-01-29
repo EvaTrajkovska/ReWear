@@ -5,6 +5,7 @@ import 'package:rewear/responsive/mobile_screen_layout.dart';
 import 'package:rewear/responsive/responsive_layout.dart';
 import 'package:rewear/responsive/web_screen_layout.dart';
 import 'package:rewear/screens/login_screen.dart';
+import 'package:rewear/service/notification_service.dart';
 import 'package:rewear/utils/imagePickerAndSnackBar.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -21,7 +22,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _surnameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   bool _isLoading = false;
-
+  final notifications = NotificationsService();
   @override
   void dispose() {
     _emailController.dispose();
@@ -43,7 +44,7 @@ class _SignupScreenState extends State<SignupScreen> {
       decoration: InputDecoration(
         hintText: hintText,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-        contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       ),
       keyboardType: textInputType,
       obscureText: isPass,
@@ -61,6 +62,8 @@ class _SignupScreenState extends State<SignupScreen> {
         email: _emailController.text,
         password: _passwordController.text,
         username: _usernameController.text);
+    await notifications.requestPermission();
+    await notifications.getToken();
 
     if (res != "succes") {
       showSnackBar(context, res);
@@ -70,7 +73,7 @@ class _SignupScreenState extends State<SignupScreen> {
     } else {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => ResponsiveLayout(
+          builder: (context) => const ResponsiveLayout(
             mobileScreenLayout: MobileScreenLayout(),
             webScreenLayout: WebScreenLayout(),
           ),

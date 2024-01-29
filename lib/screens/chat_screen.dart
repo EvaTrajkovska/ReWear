@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rewear/providers/firebase_provider.dart';
 import 'package:rewear/utils/colors.dart';
+import 'package:rewear/utils/dimensions.dart';
 import '../widgets/chat_messages.dart';
 import '../widgets/chat_text_field.dart';
 
@@ -26,7 +27,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(),
+        appBar: _buildAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -72,6 +73,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ],
               );
+
             } else {
               return const SizedBox(); // Return an empty widget if the user is null or name is empty
             }

@@ -5,6 +5,7 @@ import 'package:rewear/responsive/mobile_screen_layout.dart';
 import 'package:rewear/responsive/responsive_layout.dart';
 import 'package:rewear/responsive/web_screen_layout.dart';
 import 'package:rewear/screens/signup_screen.dart';
+import 'package:rewear/service/notification_service.dart';
 import 'package:rewear/utils/dimensions.dart';
 import 'package:rewear/widgets/text_field_input.dart';
 
@@ -19,6 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
+  final notifications = NotificationsService();
   @override
   void dispose() {
     _emailController.dispose();
@@ -34,6 +36,9 @@ class _LoginScreenState extends State<LoginScreen> {
       email: _emailController.text,
       password: _passwordController.text,
     );
+    await notifications.requestPermission();
+    await notifications.getToken();
+
     if (res == "succes") {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(

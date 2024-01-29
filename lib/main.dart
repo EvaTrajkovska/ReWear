@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -12,7 +13,9 @@ import 'package:rewear/screens/login_screen.dart';
 import 'package:rewear/screens/signup_screen.dart';
 import 'package:rewear/responsive/responsive_layout.dart';
 import 'package:rewear/utils/colors.dart';
-
+Future<void> _backgroundMessageHandler( RemoteMessage message ) async{
+  await Firebase.initializeApp();
+}
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {
@@ -27,6 +30,8 @@ Future<void> main() async {
   } else {
     await Firebase.initializeApp();
   }
+  await FirebaseMessaging.instance.getInitialMessage();
+  FirebaseMessaging.onBackgroundMessage(_backgroundMessageHandler);
   runApp(const MyApp());
 }
 
