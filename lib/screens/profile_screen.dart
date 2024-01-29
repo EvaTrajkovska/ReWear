@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:rewear/providers/user_provider.dart';
 import 'package:rewear/resources/authentication_metods.dart';
+import 'package:rewear/screens/chat_screen.dart';
 import 'package:rewear/screens/login_screen.dart';
 import 'package:rewear/utils/colors.dart';
 import 'package:rewear/resources/database_method.dart';
@@ -230,14 +231,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           )
         : Scaffold(
             resizeToAvoidBottomInset: true,
-            appBar:width > webScreenSize ? null
+            appBar: width > webScreenSize
+                ? null
                 : AppBar(
-              backgroundColor: coolGrey,
-              title: SvgPicture.asset(
-                'assets/ReWear.svg',
-                height: 100,
-              ),
-            ),
+                    backgroundColor: coolGrey,
+                    title: SvgPicture.asset(
+                      'assets/ReWear.svg',
+                      height: 100,
+                    ),
+                  ),
             body: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
@@ -303,7 +305,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -342,7 +346,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           : RateButton(
                               text: 'Контактирај продавач',
                               function: () async {
-                                // TODO: messages
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        ChatScreen(userId: widget.uid),
+                                  ),
+                                );
                               },
                             ),
                     ],

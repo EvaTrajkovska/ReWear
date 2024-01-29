@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:rewear/providers/firebase_provider.dart';
 import 'package:rewear/providers/user_provider.dart';
 import 'package:rewear/responsive/mobile_screen_layout.dart';
 import 'package:rewear/responsive/web_screen_layout.dart';
@@ -39,6 +40,9 @@ class MyApp extends StatelessWidget {
         providers: [
           ChangeNotifierProvider(
             create: (_) => UserProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => FirebaseProvider(),
           )
         ],
         child: MaterialApp(
