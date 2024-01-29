@@ -10,6 +10,8 @@ class Post {
   final String postId;
   final DateTime datePublished;
   final String postUrl;
+  final List saves;
+
 
   const Post({
     required this.title,
@@ -21,6 +23,7 @@ class Post {
     required this.postId,
     required this.datePublished,
     required this.postUrl,
+    required this.saves,
   });
 
   static Post fromSnap(DocumentSnapshot snap) {
@@ -36,6 +39,7 @@ class Post {
       datePublished: snapshot["datePublished"],
       username: snapshot["username"],
       postUrl: snapshot['postUrl'],
+      saves: snapshot["saves"],
     );
   }
 
@@ -49,5 +53,10 @@ class Post {
         "postId": postId,
         "datePublished": datePublished,
         'postUrl': postUrl,
+        'saves' : saves,
       };
+
+
 }
+
+

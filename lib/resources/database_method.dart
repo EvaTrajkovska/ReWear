@@ -24,6 +24,7 @@ class FireStoreMethods {
         postId: postId,
         datePublished: DateTime.now(),
         postUrl: photoUrl,
+        saves: [],
       );
       _firestore.collection('posts').doc(postId).set(post.toJson());
       res = "success";
@@ -53,6 +54,47 @@ class FireStoreMethods {
     }
     return res;
   }
+
+  Future<String> savePost(String postId, String uid, List saves) async {
+    String res = "Some error occurred";
+    try {
+      if (saves.contains(uid)) {
+        // if the likes list contains the user uid, we need to remove it
+        _firestore.collection('posts').doc(postId).update({
+          'saves': FieldValue.arrayRemove([uid])
+        });
+      } else {
+        // else we need to add uid to the likes array
+        _firestore.collection('posts').doc(postId).update({
+          'saves': FieldValue.arrayUnion([uid])
+        });
+      }
+      res = 'success';
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
+
+  Future<List<Map<String, dynamic>>> getSavedPosts(String userId) async {
+    List<Map<String, dynamic>> savedPosts = [];
+
+    try {
+      QuerySnapshot querySnapshot = await _firestore.collection('posts').where('saves', arrayContains: userId).get();
+
+      for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+        Map<String, dynamic> post = documentSnapshot.data() as Map<String, dynamic>;
+        savedPosts.add(post);
+      }
+    } catch (err) {
+      print('Error fetching saved posts: $err');
+    }
+
+    return savedPosts;
+  }
+
+
+
 
   Future<String> postComment(
       String postId, String text, String uid, String name) async {

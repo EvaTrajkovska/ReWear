@@ -240,16 +240,24 @@ class _PostCardState extends State<PostCard> {
                   ),
                 ),
               ),
-              IconButton(
-                  icon: const Icon(
-                    Icons.send,
-                  ),
-                  onPressed: () {}),
+             
               Expanded(
                   child: Align(
                     alignment: Alignment.bottomRight,
                     child: IconButton(
-                        icon: const Icon(Icons.bookmark_border), onPressed: () {}),
+                          icon: widget.snap['saves'].contains(user.uid)
+                              ? const Icon(
+                            Icons.bookmark,
+                            color: Colors.black,
+                          )
+                              : const Icon(
+                            Icons.bookmark_border,
+                          ),
+                          onPressed: () => FireStoreMethods().savePost(
+                            widget.snap['postId'].toString(),
+                            user.uid,
+                            widget.snap['saves'],
+                        )),
                   ))
             ],
           ),
