@@ -5,6 +5,7 @@ import 'package:rewear/providers/user_provider.dart';
 import 'package:rewear/resources/authentication_metods.dart';
 import 'package:rewear/screens/chat_screen.dart';
 import 'package:rewear/screens/login_screen.dart';
+import 'package:rewear/screens/product_screen.dart';
 import 'package:rewear/utils/colors.dart';
 import 'package:rewear/resources/database_method.dart';
 import 'package:rewear/utils/colors.dart';
@@ -287,7 +288,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                               ListTile(
-                                title: Text(
+                                title: const Text(
                                   'Оцена',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -305,7 +306,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Row(
@@ -385,10 +386,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               (snapshot.data! as dynamic).docs[index];
 
                           return SizedBox(
-                            child: Image(
+                            child: GestureDetector(
+                              onTap:(){
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProductScreen(
+                                      postId: snap['postId'].toString(),
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Image(
                               image: NetworkImage(snap['postUrl']),
                               fit: BoxFit.cover,
-                            ),
+                            ),)
                           );
                         },
                       );

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:rewear/model/user.dart' as model;
 import 'package:intl/intl.dart';
 import 'package:rewear/screens/comments_screen.dart';
+import 'package:rewear/screens/product_screen.dart';
+import 'package:rewear/screens/profile_screen.dart';
 import 'package:rewear/widgets/like_animation.dart';
 import 'package:provider/provider.dart';
 import 'package:rewear/providers/user_provider.dart';
@@ -86,7 +88,13 @@ class _PostCardState extends State<PostCard> {
             ).copyWith(right: 0),
             child: Row(
               children: <Widget>[
-                CircleAvatar(
+                GestureDetector(
+                onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) =>
+                  ProfileScreen(uid: widget.snap['uid']),
+            ),),
+                child:CircleAvatar(
                   radius: 16,
                   backgroundImage: NetworkImage(
                     widget.snap['profImage'].toString(),
@@ -94,10 +102,16 @@ class _PostCardState extends State<PostCard> {
               backgroundColor:
               const Color.fromARGB(255, 1, 25, 45),
               child: Text(widget.snap['username'].toString().characters.first.toUpperCase(), style: TextStyle(color: Colors.white)),
-
+                ),
 
           ),
-                Expanded(
+                GestureDetector(
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ProfileScreen(uid: widget.snap['uid']),
+                    ),),
+                child: Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(
                       left: 8,
@@ -115,7 +129,7 @@ class _PostCardState extends State<PostCard> {
                       ],
                     ),
                   ),
-                ),
+                )),
                 widget.snap['uid'].toString() == user.uid
                     ? IconButton(
                   onPressed: () {
@@ -171,6 +185,16 @@ class _PostCardState extends State<PostCard> {
               setState(() {
                 isLikeAnimating = true;
               });
+            },
+            onTap: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProductScreen(
+                      postId: widget.snap['postId'].toString(),
+                  ),
+                ),
+              );
             },
             child: Stack(
               alignment: Alignment.center,
@@ -258,7 +282,8 @@ class _PostCardState extends State<PostCard> {
                             user.uid,
                             widget.snap['saves'],
                         )),
-                  ))
+                  )
+              )
             ],
           ),
           //DESCRIPTION AND NUMBER OF COMMENTS

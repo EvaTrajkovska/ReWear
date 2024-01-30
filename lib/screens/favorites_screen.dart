@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:rewear/resources/database_method.dart';
+import 'package:rewear/screens/product_screen.dart';
+import 'package:rewear/utils/colors.dart';
+import 'package:rewear/utils/dimensions.dart';
 
 class SavedPostsScreen extends StatefulWidget {
   final String userId;
 
-  const SavedPostsScreen({super.key, required this.userId});
+  const SavedPostsScreen({Key? key, required this.userId}) : super(key: key);
 
   @override
   _SavedPostsScreenState createState() => _SavedPostsScreenState();
@@ -16,12 +20,12 @@ class _SavedPostsScreenState extends State<SavedPostsScreen> {
   @override
   void initState() {
     super.initState();
-    // Load the saved posts for the logged-in user when the screen is created
     loadSavedPosts();
   }
 
   Future<void> loadSavedPosts() async {
-    List<Map<String, dynamic>> posts = await FireStoreMethods().getSavedPosts(widget.userId);
+    List<Map<String, dynamic>> posts =
+    await FireStoreMethods().getSavedPosts(widget.userId);
     setState(() {
       savedPosts = posts;
     });
@@ -29,43 +33,81 @@ class _SavedPostsScreenState extends State<SavedPostsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Мои Омилени'),
+      backgroundColor:
+      width > webScreenSize ? coolGrey : mobileBackgroundColor,
+      appBar: width > webScreenSize
+          ? null
+          : AppBar(
+        backgroundColor: Color.fromARGB(0, 245, 234, 234),
+        title: SvgPicture.asset(
+          'assets/ReWear.svg',
+          height: 100,
+        ),
       ),
       body: savedPosts.isEmpty
           ? Center(
         child: Text('Немате омилени парчиња'),
       )
-          : ListView.builder(
+        :Column(
+    children: [
+    Divider(),
+    const Padding(
+    padding: EdgeInsets.symmetric(vertical: 16.0),
+    child: Text('Мои Омилени', style: TextStyle(fontSize: 25.0, ),),
+    ),
+      Divider(),
+      const SizedBox(height: 30,),
+      Expanded(
+      child:GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3, // Three cards per row
+          crossAxisSpacing: 8.0, // Adjust as needed
+          mainAxisSpacing: 10.0, // Adjust as needed
+        ),
         itemCount: savedPosts.length,
         itemBuilder: (context, index) {
           return buildPostCard(savedPosts[index]);
         },
       ),
+    ),
+    ]),
     );
   }
 
   Widget buildPostCard(Map<String, dynamic> post) {
-    // Customize this method to build your post card widget
     return Card(
-      child: Column(
+     child: Column(
         children: [
-          // Display the post image
+      Container(
+      height: MediaQuery.of(context).size.width * 0.2,
+      child:GestureDetector(
+        onTap:(){
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProductScreen(
+                postId: post['postId'].toString(),
+              ),
+            ),
+          );
+        },
+        child:
           Image.network(
-            post['postUrl'].toString(), // Replace 'imageUrl' with the actual field in your data
+            post['postUrl'].toString(),
             width: double.infinity,
-            height: 200, // Adjust the height based on your design preferences
+            height: 100,
             fit: BoxFit.cover,
-          ),
+          )
+      ),
+      ),
           ListTile(
             title: Text(post['title']),
-            subtitle: Text(post['description']),
-            // Add other details as needed
+            subtitle: Text('${post['price'].toString()} MKD'),
           ),
         ],
       ),
     );
   }
 }
-
