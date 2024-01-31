@@ -1,0 +1,60 @@
+import 'package:flutter/material.dart';
+import 'package:rewear/screens/product_screen.dart';
+
+Widget buildPostCard(BuildContext context, Map<String, dynamic> post) {
+  return Card(
+    clipBehavior: Clip.antiAlias,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    child: Stack(
+      alignment: Alignment.bottomCenter,
+      children: [
+        Image.network(
+          post['postUrl'],
+          fit: BoxFit.fill,
+          width: double.infinity,
+          height: double.infinity,
+        ),
+        GestureDetector(
+          onTap: () {
+            // TODO: see what to do here
+            Future.delayed(Duration(seconds: 1), () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProductScreen(
+                    postId: post['postId'].toString(),
+                  ),
+                ),
+              );
+            });
+          },
+        ),
+        Container(
+          width: double.infinity,
+          color: Colors.white.withOpacity(0.7),
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                post['description'] ?? 'No description',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                '${post['price'] ?? '0'} МКД',
+                style: const TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}

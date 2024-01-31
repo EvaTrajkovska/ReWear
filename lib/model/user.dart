@@ -11,8 +11,9 @@ class User {
   final List<dynamic> following;
   final List<dynamic> rating;
   final List<dynamic> likes;
+  bool isPremium; // Adjusted to be a regular variable, not final
 
-  const User({
+  User({
     required this.name,
     required this.surname,
     required this.username,
@@ -23,6 +24,7 @@ class User {
     required this.following,
     required this.rating,
     required this.likes,
+    this.isPremium = false, // Default value set to false, but it's modifiable
   });
 
   Map<String, dynamic> toJson() {
@@ -32,11 +34,12 @@ class User {
       "email": email,
       "name": name,
       "surname": surname,
-      "password": password, // TODO: handling passwords securely
+      "password": password, // Reminder: Ensure secure handling of passwords
       "followers": followers,
       "following": following,
       "rating": rating,
       "likes": likes,
+      "isPremium": isPremium, // Added isPremium to JSON
     };
   }
 
@@ -45,7 +48,6 @@ class User {
       username: json["username"] as String? ?? '',
       uid: json["uid"] as String? ?? '',
       email: json["email"] as String? ?? '',
-      // Note: Storing passwords in plain text is a security risk. Ensure that this is handled securely.
       password: json["password"] as String? ?? '',
       name: json["name"] as String? ?? '',
       surname: json["surname"] as String? ?? '',
@@ -53,6 +55,7 @@ class User {
       following: List.from(json["following"] ?? []),
       rating: List.from(json["rating"] ?? []),
       likes: List.from(json["likes"] ?? []),
+      isPremium: json["isPremium"] as bool? ?? false, // Handling isPremium
     );
   }
 

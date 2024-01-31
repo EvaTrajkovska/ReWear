@@ -334,7 +334,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ? RateButton(
                               text: 'Одјави се',
                               function: () async {
-                                await AuthenticationMetods().signOut();
+                                await AuthenticationMethods().signOut();
                                 if (context.mounted) {
                                   Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
@@ -386,22 +386,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               (snapshot.data! as dynamic).docs[index];
 
                           return SizedBox(
-                            child: GestureDetector(
-                              onTap:(){
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ProductScreen(
-                                      postId: snap['postId'].toString(),
-                                    ),
+                              child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProductScreen(
+                                    postId: snap['postId'].toString(),
                                   ),
-                                );
-                              },
-                              child: Image(
+                                ),
+                              );
+                            },
+                            child: Image(
                               image: NetworkImage(snap['postUrl']),
                               fit: BoxFit.cover,
-                            ),)
-                          );
+                            ),
+                          ));
                         },
                       );
                     },

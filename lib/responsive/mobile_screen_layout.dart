@@ -97,13 +97,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
               backgroundColor: warmGrey,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.favorite_border_rounded,
-                  color: _page == 4 ? blueGrey : warmGrey),
-              // label: '',
-              backgroundColor: warmGrey,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person, color: _page == 5 ? blueGrey : warmGrey),
+              icon: Icon(Icons.person, color: _page == 4 ? blueGrey : warmGrey),
               //label: '',
               backgroundColor: warmGrey,
             ),

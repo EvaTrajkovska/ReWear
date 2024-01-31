@@ -4,7 +4,7 @@ import 'package:rewear/resources/authentication_metods.dart';
 
 class UserProvider with ChangeNotifier {
   User? _user;
-  final AuthenticationMetods _authMethods = AuthenticationMetods();
+  final AuthenticationMethods _authMethods = AuthenticationMethods();
 
   User get getUser => _user!;
 

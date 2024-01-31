@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import 'package:rewear/providers/user_provider.dart';
 import 'package:rewear/model/user.dart';
 import 'package:rewear/resources/database_method.dart';
-import 'package:rewear/screens/home_screen.dart';
 import 'package:rewear/screens/login_screen.dart';
 import 'package:rewear/utils/colors.dart';
 import 'package:rewear/utils/dimensions.dart';
@@ -207,23 +206,32 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: width > webScreenSize ? null
-      :AppBar(
-        backgroundColor: Color.fromARGB(0, 245, 234, 234),
-        title: SvgPicture.asset(
-          'assets/ReWear.svg',
-          height: 100,
-        ),
-      ),
+      appBar: width > webScreenSize
+          ? null
+          : AppBar(
+              backgroundColor: Color.fromARGB(0, 245, 234, 234),
+              title: SvgPicture.asset(
+                'assets/ReWear.svg',
+                height: 100,
+              ),
+            ),
       body: Padding(
         padding: const EdgeInsets.all(18.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Divider(height: 15,thickness: 2,),
+            const Divider(
+              height: 15,
+              thickness: 2,
+            ),
             UserProfileHeader(username: username),
-            const Divider(height: 15,thickness: 2,),
-            SizedBox(height: 15,),
+            const Divider(
+              height: 15,
+              thickness: 2,
+            ),
+            SizedBox(
+              height: 15,
+            ),
             _file == null
                 ? Padding(
                     padding: EdgeInsets.symmetric(vertical: 16),
@@ -232,7 +240,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       label: Text('Додај Слика'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: greenColor,
-                        foregroundColor:secondaryColor,
+                        foregroundColor: secondaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
@@ -253,7 +261,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       label: Text(''),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: greenColor,
-                        foregroundColor:secondaryColor,
+                        foregroundColor: secondaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
@@ -276,7 +284,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       label: Text('Додај наслов'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: greenColor,
-                        foregroundColor:secondaryColor,
+                        foregroundColor: secondaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
@@ -297,7 +305,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       label: Text(''),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: greenColor,
-                        foregroundColor:secondaryColor,
+                        foregroundColor: secondaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
@@ -320,7 +328,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       label: Text('Додај опис'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: greenColor,
-                        foregroundColor:secondaryColor,
+                        foregroundColor: secondaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
@@ -341,7 +349,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       label: Text(''),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: greenColor,
-                        foregroundColor:secondaryColor,
+                        foregroundColor: secondaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
@@ -364,7 +372,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       icon: Icon(Icons.add),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: greenColor,
-                        foregroundColor:secondaryColor,
+                        foregroundColor: secondaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
@@ -385,7 +393,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       label: Text(''),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: greenColor,
-                        foregroundColor:secondaryColor,
+                        foregroundColor: secondaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),

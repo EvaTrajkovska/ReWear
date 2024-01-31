@@ -32,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       _isLoading = true;
     });
-    String res = await AuthenticationMetods().loginUser(
+    String res = await AuthenticationMethods().loginUser(
       email: _emailController.text,
       password: _passwordController.text,
     );
@@ -43,10 +43,9 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
             builder: (context) => const ResponsiveLayout(
-              mobileScreenLayout: MobileScreenLayout(),
-              webScreenLayout: WebScreenLayout(),
-            )
-        ),
+                  mobileScreenLayout: MobileScreenLayout(),
+                  webScreenLayout: WebScreenLayout(),
+                )),
       );
     } else {
       //To do: implement exceptions
@@ -54,15 +53,15 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoading = false;
       });
     }
-
   }
- void navigateToSignup() async{
+
+  void navigateToSignup() async {
     await Navigator.of(context).push(
-        MaterialPageRoute(
-            builder: (context) => const SignupScreen(),
-    ),
-   );
- }
+      MaterialPageRoute(
+        builder: (context) => const SignupScreen(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,9 +70,10 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SingleChildScrollView(
           // Wrap content in SingleChildScrollView
           child: Container(
-            padding: MediaQuery.of(context).size.width> webScreenSize?
-            EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width/3):
-            const EdgeInsets.symmetric(horizontal: 40),
+            padding: MediaQuery.of(context).size.width > webScreenSize
+                ? EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width / 3)
+                : const EdgeInsets.symmetric(horizontal: 40),
             width: double.infinity,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,

@@ -80,29 +80,52 @@ class _ProductScreenState extends State<ProductScreen> {
             ),
           ]),
           // Display product details here
-          SizedBox(height: 10, width: 10,),
+          SizedBox(
+            height: 10,
+            width: 10,
+          ),
 
           Text(
             DateFormat('  dd MMMM yyyy', 'en_US')
-                .format(postData?['datePublished'].toDate()), style: TextStyle(fontSize: 14),
+                .format(postData?['datePublished'].toDate()),
+            style: TextStyle(fontSize: 14),
           ),
-          SizedBox(height: 10, width: 10,),
-          Text('  ${postData?['likes'].length} likes ', style: TextStyle(fontSize: 16),),
+          SizedBox(
+            height: 10,
+            width: 10,
+          ),
+          Text(
+            '  ${postData?['likes'].length} likes ',
+            style: TextStyle(fontSize: 16),
+          ),
           Text(
             " ${postData?['title'] ?? 'Loading...'}",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28, fontFamily: AutofillHints.familyName),
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 28,
+                fontFamily: AutofillHints.familyName),
           ),
-          SizedBox(height: 10,),
-          Text('  ${postData?['description']}', style: TextStyle(fontSize: 18),),
-          SizedBox(height: 10,),
-          Text('  ${postData?['price']} MKD', style: TextStyle(fontWeight: FontWeight.bold, fontSize:35, color: greenColor )),
-          SizedBox(height: 50,),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            '  ${postData?['description']}',
+            style: TextStyle(fontSize: 18),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text('  ${postData?['price']} MKD',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 35,
+                  color: greenColor)),
+          SizedBox(
+            height: 50,
+          ),
           Text(postData?['username']),
 
-          // Add other details as needed
-          Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
+          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
             RateButton(
               text: 'Контактирај продавач',
               function: () async {

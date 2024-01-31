@@ -4,78 +4,78 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rewear/model/user.dart' as model;
 
-class AuthenticationMetods {
+class AuthenticationMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  // Fetches user details from Firestore
   Future<model.User> getUserDetails() async {
     User currentUser = _auth.currentUser!;
-
     DocumentSnapshot snap =
         await _firestore.collection('users').doc(currentUser.uid).get();
     return model.User.fromSnap(snap);
   }
 
-  // sign up
+  // Signs up a user and adds them to Firestore, including isPremium status
   Future<String> signUpUser({
     required String name,
     required String surname,
     required String username,
     required String email,
     required String password,
-    //required Uint8List file,
+    bool isPremium = false, // Default isPremium to false for new signups
   }) async {
     String res = "Some error Occurred";
     try {
-      if (name.isNotEmpty ||
-          surname.isNotEmpty ||
-          username.isNotEmpty ||
-          email.isNotEmpty ||
+      if (name.isNotEmpty &&
+          surname.isNotEmpty &&
+          username.isNotEmpty &&
+          email.isNotEmpty &&
           password.isNotEmpty) {
-        // registering user in auth with email and password
         UserCredential cred = await _auth.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
-        print(cred.user!.uid);
 
-        // add user in database
+        // Create a new user object with isPremium status
         model.User user = model.User(
-            name: name,
-            surname: surname,
-            username: username,
-            email: email,
-            password: password,
-            uid: cred.user!.uid,
-            rating: [],
-            likes: [],
-            following: [],
-            followers: []);
+          name: name,
+          surname: surname,
+          username: username,
+          email: email,
+          password: password, // Ensure secure handling of passwords
+          uid: cred.user!.uid,
+          followers: [],
+          following: [],
+          rating: [],
+          likes: [],
+          isPremium: isPremium,
+        );
+
+        // Add the user to Firestore
         await _firestore
             .collection("users")
             .doc(cred.user!.uid)
             .set(user.toJson());
 
         res = "success";
-        print(res);
       } else {
         res = "Please enter all the fields";
       }
     } catch (err) {
-      return err.toString();
+      res = err.toString();
     }
     return res;
   }
 
-  // logging in user
+  // Logs in a user with email and password
   Future<String> loginUser({
     required String email,
     required String password,
   }) async {
     String res = "Error";
     try {
-      if (email.isNotEmpty || password.isNotEmpty) {
-        // logging in user with email and password
+      if (email.isNotEmpty && password.isNotEmpty) {
         await _auth.signInWithEmailAndPassword(
           email: email,
           password: password,
@@ -85,13 +85,12 @@ class AuthenticationMetods {
         res = "Please enter all the fields";
       }
     } catch (err) {
-      return err.toString();
+      res = err.toString();
     }
-    print(res);
     return res;
   }
 
-  // sign out
+  // Signs out the current user
   Future<void> signOut() async {
     await _auth.signOut();
   }

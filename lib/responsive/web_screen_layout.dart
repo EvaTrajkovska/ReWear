@@ -70,7 +70,8 @@ class _WebScreenLayoutState extends State<WebScreenLayout> {
                 MaterialPageRoute(builder: (context) => SearchScreen()),
               );
             },
-          ),IconButton(
+          ),
+          IconButton(
             icon: Icon(
               Icons.message_outlined,
               color: _page == 1 ? blueGrey : warmGrey,
@@ -87,21 +88,14 @@ class _WebScreenLayoutState extends State<WebScreenLayout> {
           IconButton(
             icon: Icon(
               Icons.bookmark_border_rounded,
-              color: _page == 3 ?blueGrey : warmGrey,
+              color: _page == 3 ? blueGrey : warmGrey,
             ),
             onPressed: () => navigationTapped(3),
           ),
           IconButton(
             icon: Icon(
-              Icons.favorite_border_rounded,
-              color: _page == 4 ? blueGrey : warmGrey,
-            ),
-            onPressed: () => navigationTapped(4),
-          ),
-          IconButton(
-            icon: Icon(
               Icons.person_outline,
-              color: _page == 5 ? blueGrey : warmGrey,
+              color: _page == 4 ? blueGrey : warmGrey,
             ),
             onPressed: () => navigationTapped(5),
           ),

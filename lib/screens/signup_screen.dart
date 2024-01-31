@@ -44,7 +44,8 @@ class _SignupScreenState extends State<SignupScreen> {
       decoration: InputDecoration(
         hintText: hintText,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-        contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       ),
       keyboardType: textInputType,
       obscureText: isPass,
@@ -56,7 +57,7 @@ class _SignupScreenState extends State<SignupScreen> {
       _isLoading = true;
     });
 
-    String res = await AuthenticationMetods().signUpUser(
+    String res = await AuthenticationMethods().signUpUser(
         name: _nameController.text,
         surname: _surnameController.text,
         email: _emailController.text,

@@ -80,7 +80,6 @@ class _PostCardState extends State<PostCard> {
       ),
       child: Column(
         children: [
-          // HEADER SECTION OF THE POST
           Container(
             padding: const EdgeInsets.symmetric(
               vertical: 4,
@@ -89,87 +88,93 @@ class _PostCardState extends State<PostCard> {
             child: Row(
               children: <Widget>[
                 GestureDetector(
-                onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) =>
-                  ProfileScreen(uid: widget.snap['uid']),
-            ),),
-                child:CircleAvatar(
-                  radius: 16,
-                  backgroundImage: NetworkImage(
-                    widget.snap['profImage'].toString(),
-                  ),
-              backgroundColor:
-              const Color.fromARGB(255, 1, 25, 45),
-              child: Text(widget.snap['username'].toString().characters.first.toUpperCase(), style: TextStyle(color: Colors.white)),
-                ),
-
-          ),
-                GestureDetector(
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) =>
                           ProfileScreen(uid: widget.snap['uid']),
-                    ),),
-                child: Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 8,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          widget.snap['username'].toString(),
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
                     ),
                   ),
-                )),
+                  child: CircleAvatar(
+                    radius: 16,
+                    backgroundImage: NetworkImage(
+                      widget.snap['profImage'].toString(),
+                    ),
+                    backgroundColor: const Color.fromARGB(255, 1, 25, 45),
+                    child: Text(
+                        widget.snap['username']
+                            .toString()
+                            .characters
+                            .first
+                            .toUpperCase(),
+                        style: TextStyle(color: Colors.white)),
+                  ),
+                ),
+                GestureDetector(
+                    onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ProfileScreen(uid: widget.snap['uid']),
+                          ),
+                        ),
+                    child: Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          left: 8,
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              widget.snap['username'].toString(),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )),
                 widget.snap['uid'].toString() == user.uid
                     ? IconButton(
-                  onPressed: () {
-                    showDialog(
-                      useRootNavigator: false,
-                      context: context,
-                      builder: (context) {
-                        return Dialog(
-                          child: ListView(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 16),
-                              shrinkWrap: true,
-                              children: [
-                                'Delete',
-                              ]
-                                  .map(
-                                    (e) => InkWell(
-                                    child: Container(
-                                      padding:
-                                      const EdgeInsets.symmetric(
-                                          vertical: 12,
-                                          horizontal: 16),
-                                      child: Text(e),
-                                    ),
-                                    onTap: () {
-                                      // deletePost(
-                                      //   widget.snap['postId']
-                                      //       .toString(),
-                                      // );
-                                      // remove the dialog box
-                                      Navigator.of(context).pop();
-                                    }),
-                              )
-                                  .toList()),
-                        );
-                      },
-                    );
-                  },
-                  icon: const Icon(Icons.more_vert),
-                )
+                        onPressed: () {
+                          showDialog(
+                            useRootNavigator: false,
+                            context: context,
+                            builder: (context) {
+                              return Dialog(
+                                child: ListView(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16),
+                                    shrinkWrap: true,
+                                    children: [
+                                      'Delete',
+                                    ]
+                                        .map(
+                                          (e) => InkWell(
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 12,
+                                                        horizontal: 16),
+                                                child: Text(e),
+                                              ),
+                                              onTap: () {
+                                                // deletePost(
+                                                //   widget.snap['postId']
+                                                //       .toString(),
+                                                // );
+                                                // remove the dialog box
+                                                Navigator.of(context).pop();
+                                              }),
+                                        )
+                                        .toList()),
+                              );
+                            },
+                          );
+                        },
+                        icon: const Icon(Icons.more_vert),
+                      )
                     : Container(),
               ],
             ),
@@ -186,12 +191,12 @@ class _PostCardState extends State<PostCard> {
                 isLikeAnimating = true;
               });
             },
-            onTap: (){
+            onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => ProductScreen(
-                      postId: widget.snap['postId'].toString(),
+                    postId: widget.snap['postId'].toString(),
                   ),
                 ),
               );
@@ -239,12 +244,12 @@ class _PostCardState extends State<PostCard> {
                 child: IconButton(
                   icon: widget.snap['likes'].contains(user.uid)
                       ? const Icon(
-                    Icons.favorite,
-                    color: Colors.red,
-                  )
+                          Icons.favorite,
+                          color: Colors.red,
+                        )
                       : const Icon(
-                    Icons.favorite_border,
-                  ),
+                          Icons.favorite_border,
+                        ),
                   onPressed: () => FireStoreMethods().likePost(
                     widget.snap['postId'].toString(),
                     user.uid,
@@ -264,26 +269,24 @@ class _PostCardState extends State<PostCard> {
                   ),
                 ),
               ),
-             
               Expanded(
                   child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: IconButton(
-                          icon: widget.snap['saves'].contains(user.uid)
-                              ? const Icon(
+                alignment: Alignment.bottomRight,
+                child: IconButton(
+                    icon: widget.snap['saves'].contains(user.uid)
+                        ? const Icon(
                             Icons.bookmark,
                             color: Colors.black,
                           )
-                              : const Icon(
+                        : const Icon(
                             Icons.bookmark_border,
                           ),
-                          onPressed: () => FireStoreMethods().savePost(
-                            widget.snap['postId'].toString(),
-                            user.uid,
-                            widget.snap['saves'],
+                    onPressed: () => FireStoreMethods().savePost(
+                          widget.snap['postId'].toString(),
+                          user.uid,
+                          widget.snap['saves'],
                         )),
-                  )
-              )
+              ))
             ],
           ),
           //DESCRIPTION AND NUMBER OF COMMENTS
