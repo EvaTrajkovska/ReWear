@@ -196,7 +196,8 @@ class _PostCardState extends State<PostCard> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => ProductScreen(
-                    postId: widget.snap['postId'].toString(),
+                    // postId: widget.snap['postId'].toString(),
+                    snap: widget.snap,
                   ),
                 ),
               );

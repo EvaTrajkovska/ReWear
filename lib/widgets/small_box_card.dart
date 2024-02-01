@@ -18,13 +18,13 @@ Widget buildPostCard(BuildContext context, Map<String, dynamic> post) {
         ),
         GestureDetector(
           onTap: () {
-            // TODO: see what to do here
+            // This delays the navigation by 1 second as per your existing code
             Future.delayed(Duration(seconds: 1), () async {
               await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => ProductScreen(
-                    postId: post['postId'].toString(),
+                    snap: post, // Ensure 'post' is not null here
                   ),
                 ),
               );

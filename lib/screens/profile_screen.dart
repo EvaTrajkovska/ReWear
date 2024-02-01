@@ -388,14 +388,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           return SizedBox(
                               child: GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ProductScreen(
-                                    postId: snap['postId'].toString(),
+                              // This delays the navigation by 1 second as per your existing code
+                              Future.delayed(Duration(seconds: 1), () async {
+                                DocumentSnapshot snap =
+                                    (snapshot.data! as dynamic).docs[index];
+                                Map<String, dynamic> postData =
+                                    snap.data() as Map<String, dynamic>;
+
+                                // Add the postId to the postData map, assuming the document ID is the postId
+                                postData['postId'] = snap.id;
+
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProductScreen(
+                                      snap:
+                                          postData, // Pass the postData map to the ProductScreen
+                                    ),
                                   ),
-                                ),
-                              );
+                                );
+                              });
                             },
                             child: Image(
                               image: NetworkImage(snap['postUrl']),
