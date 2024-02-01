@@ -29,10 +29,10 @@ class _FeedScreenState extends State<FeedScreen> {
   }
 
   Future<void> _populatePostLists(
-    List<DocumentSnapshot<Map<String, dynamic>>> allPosts,
-    List<DocumentSnapshot<Map<String, dynamic>>> premiumPosts,
-    List<DocumentSnapshot<Map<String, dynamic>>> regularPosts,
-  ) async {
+      List<DocumentSnapshot<Map<String, dynamic>>> allPosts,
+      List<DocumentSnapshot<Map<String, dynamic>>> premiumPosts,
+      List<DocumentSnapshot<Map<String, dynamic>>> regularPosts,
+      ) async {
     for (var post in allPosts) {
       var isPremium = await _checkIfUserIsPremium(post['uid']);
       if (isPremium) {
@@ -46,12 +46,12 @@ class _FeedScreenState extends State<FeedScreen> {
   Widget _buildPostGrid(
       List<DocumentSnapshot> posts, bool isPremiumList, BuildContext context) {
     return SliverGrid(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
         childAspectRatio: 0.7,
       ),
       delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
+            (BuildContext context, int index) {
           return FutureBuilder<bool>(
             future: _checkIfUserIsPremium(posts[index]['uid']),
             builder: (context, AsyncSnapshot<bool> snapshot) {
@@ -81,26 +81,26 @@ class _FeedScreenState extends State<FeedScreen> {
       appBar: width > webScreenSize
           ? null
           : AppBar(
-              backgroundColor: mobileBackgroundColor,
-              title: SvgPicture.asset(
-                'assets/ReWear.svg',
-                height: 100,
-              ),
-              actions: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.search,
-                    color: greenColor,
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SearchScreen()),
-                    );
-                  },
-                ),
-              ],
+        backgroundColor: mobileBackgroundColor,
+        title: SvgPicture.asset(
+          'assets/ReWear.svg',
+          height: 100,
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.search,
+              color: greenColor,
             ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SearchScreen()),
+              );
+            },
+          ),
+        ],
+      ),
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: FirebaseFirestore.instance.collection('posts').snapshots(),
         builder: (context, snapshot) {
@@ -124,9 +124,9 @@ class _FeedScreenState extends State<FeedScreen> {
 
               return CustomScrollView(
                 slivers: [
-                  SliverToBoxAdapter(
+                  const SliverToBoxAdapter(
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
                       child: Center(
                         child: Text(
                           'Избрани за тебе',
@@ -139,9 +139,9 @@ class _FeedScreenState extends State<FeedScreen> {
                     ),
                   ),
                   _buildPostGrid(regularPosts, false, context),
-                  SliverToBoxAdapter(
+                  const SliverToBoxAdapter(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      padding: EdgeInsets.symmetric(vertical: 16.0),
                       child: Center(
                         child: Text('Наш избор',
                             style: TextStyle(
@@ -151,9 +151,9 @@ class _FeedScreenState extends State<FeedScreen> {
                       ),
                     ),
                   ),
-                  SliverToBoxAdapter(
+                  const SliverToBoxAdapter(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
                       child: Center(
                         child: Text('Артикли на денот',
                             style: TextStyle(fontSize: 15)),

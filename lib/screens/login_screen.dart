@@ -9,6 +9,8 @@ import 'package:rewear/service/notification_service.dart';
 import 'package:rewear/utils/dimensions.dart';
 import 'package:rewear/widgets/text_field_input.dart';
 
+import '../utils/colors.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -66,6 +68,13 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: mobileBackgroundColor,
+        title: SvgPicture.asset(
+          'assets/ReWear.svg',
+          height: 100,
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           // Wrap content in SingleChildScrollView
@@ -78,9 +87,8 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SvgPicture.asset('assets/ReWear-_2_.svg', height: 100),
-                SizedBox(height: 60),
-                Text(
+                const SizedBox(height: 60),
+                const Text(
                   'LOG IN',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
@@ -89,13 +97,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     color: Color.fromRGBO(24, 29, 49, 1),
                   ),
                 ),
-                SizedBox(height: 80),
+                const SizedBox(height: 80),
                 TextFieldInput(
                   hintText: 'Enter your email',
                   textInputType: TextInputType.emailAddress,
                   textEditingController: _emailController,
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 TextFieldInput(
                   hintText: 'Enter your password',
                   textInputType: TextInputType.text,

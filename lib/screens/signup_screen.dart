@@ -8,6 +8,9 @@ import 'package:rewear/screens/login_screen.dart';
 import 'package:rewear/service/notification_service.dart';
 import 'package:rewear/utils/imagePickerAndSnackBar.dart';
 
+import '../utils/colors.dart';
+import '../utils/dimensions.dart';
+
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
@@ -96,21 +99,31 @@ class _SignupScreenState extends State<SignupScreen> {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: mobileBackgroundColor,
+        title: SvgPicture.asset(
+          'assets/ReWear.svg',
+          height: 100,
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: size.width * 0.08),
+    child: Container(
+    padding: MediaQuery.of(context).size.width > webScreenSize
+    ? EdgeInsets.symmetric(
+    horizontal: MediaQuery.of(context).size.width / 4)
+        : const EdgeInsets.symmetric(horizontal: 40),
+    width: double.infinity,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: size.height * 0.05),
-              SvgPicture.asset('assets/ReWear-_2_.svg',
-                  height: size.height * 0.1),
               SizedBox(height: size.height * 0.02),
-              Text(
+              const Text(
                 'Креирај Профил',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: size.width * 0.1,
+                  fontSize: 40,
                   fontFamily: 'Helvetica',
                   color: Color.fromRGBO(24, 29, 49, 1),
                 ),
@@ -153,13 +166,13 @@ class _SignupScreenState extends State<SignupScreen> {
                   width: double.infinity,
                   alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(vertical: size.height * 0.015),
-                  decoration: ShapeDecoration(
+                  decoration: const ShapeDecoration(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(4)),
                     ),
                     color: Color.fromRGBO(24, 29, 49, 1),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Креирај',
                     style: TextStyle(color: Color.fromRGBO(241, 239, 239, 1)),
                   ),
@@ -172,7 +185,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     builder: (context) => const LoginScreen(),
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   "Веќе имаш профил? Најави се",
                   style: TextStyle(
                     decoration: TextDecoration.underline,
@@ -182,7 +195,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               ),
             ],
-          ),
+          ),),
         ),
       ),
     );
