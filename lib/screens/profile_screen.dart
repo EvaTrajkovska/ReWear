@@ -34,6 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool isFollowing = false;
   bool isLoading = false;
   String ratedUid = '';
+  int numSoldItems = 0;
 
   @override
   void initState() {
@@ -56,6 +57,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .collection('posts')
           .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .get();
+
+      int soldItems = userSnap['soldItems'] ?? 0;
+      numSoldItems = soldItems;
 
       userData = userSnap.data()!;
 
@@ -281,14 +285,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: Column(
                             children: <Widget>[
                               ListTile(
-                                title: Text(
+                                title: const Text(
                                   'Продадени производи',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                   textAlign: TextAlign.center,
                                 ),
                                 subtitle: Text(
-                                  ratingCount,
-                                  style: TextStyle(
+                                  numSoldItems.toString(),
+                                  style: const TextStyle(
                                     fontSize: 30,
                                   ),
                                   textAlign: TextAlign.center,
@@ -367,62 +371,85 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   Divider(),
                   FutureBuilder(
-                    future: FirebaseFirestore.instance
-                        .collection('posts')
-                        .where('uid', isEqualTo: widget.uid)
-                        .get(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
+                      future: FirebaseFirestore.instance
+                          .collection('posts')
+                          .where('uid', isEqualTo: widget.uid)
+                          .get(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
 
-                      return GridView.builder(
-                        shrinkWrap: true,
-                        itemCount: (snapshot.data! as dynamic).docs.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 5,
-                          mainAxisSpacing: 1.5,
-                          childAspectRatio: 1,
-                        ),
-                        itemBuilder: (context, index) {
-                          DocumentSnapshot snap =
-                              (snapshot.data! as dynamic).docs[index];
+                        return GridView.builder(
+                          shrinkWrap: true,
+                          itemCount: (snapshot.data! as dynamic).docs.length,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 5,
+                            mainAxisSpacing: 1.5,
+                            childAspectRatio: 1,
+                          ),
+                          itemBuilder: (context, index) {
+                            DocumentSnapshot snap =
+                                (snapshot.data! as dynamic).docs[index];
 
-                          return SizedBox(
-                              child: GestureDetector(
-                            onTap: () {
-                              Future.delayed(Duration(seconds: 1), () async {
-                                DocumentSnapshot snap =
-                                    (snapshot.data! as dynamic).docs[index];
-                                Map<String, dynamic> postData =
-                                    snap.data() as Map<String, dynamic>;
+                            return SizedBox(
+                                child: GestureDetector(
+                              onTap: () {
+                                Future.delayed(Duration(seconds: 1), () async {
+                                  DocumentSnapshot snap =
+                                      (snapshot.data! as dynamic).docs[index];
+                                  Map<String, dynamic> postData =
+                                      snap.data() as Map<String, dynamic>;
 
-                                postData['postId'] = snap.id;
+                                  postData['postId'] = snap.id;
 
-                                await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ProductScreen(
-                                      snap: postData,
+                                  await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ProductScreen(
+                                        snap: postData,
+                                      ),
                                     ),
+                                  );
+                                  getData();
+                                });
+                              },
+                                child: Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: NetworkImage(snap['postUrl']),
+                                    fit: BoxFit.cover,
                                   ),
-                                );
-                                getData();
-                              });
-                            },
-                            child: Image(
-                              image: NetworkImage(snap['postUrl']),
-                              fit: BoxFit.cover,
-                            ),
-                          ));
-                        },
-                      );
-                    },
-                  )
+                                ),
+                                child: (snap['sold'] == true)
+                                    ? Center(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color:
+                                                Colors.black.withOpacity(0.5),
+                                          ),
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            'SOLD',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : Container(),
+                              ),
+                            ));
+                          },
+                        );
+                      })
                 ],
               ),
             ));

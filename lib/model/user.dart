@@ -11,6 +11,7 @@ class User {
   final List<dynamic> following;
   final List<dynamic> rating;
   final List<dynamic> likes;
+  final num soldItems;
   bool isPremium; // Adjusted to be a regular variable, not final
 
   User({
@@ -24,6 +25,7 @@ class User {
     required this.following,
     required this.rating,
     required this.likes,
+    required this.soldItems,
     this.isPremium = false, // Default value set to false, but it's modifiable
   });
 
@@ -34,12 +36,13 @@ class User {
       "email": email,
       "name": name,
       "surname": surname,
-      "password": password, // Reminder: Ensure secure handling of passwords
+      "password": password,
       "followers": followers,
       "following": following,
       "rating": rating,
       "likes": likes,
-      "isPremium": isPremium, // Added isPremium to JSON
+      "isPremium": isPremium,
+      "soldItems": soldItems
     };
   }
 
@@ -56,6 +59,7 @@ class User {
       rating: List.from(json["rating"] ?? []),
       likes: List.from(json["likes"] ?? []),
       isPremium: json["isPremium"] as bool? ?? false, // Handling isPremium
+       soldItems: json["soldItems"]
     );
   }
 

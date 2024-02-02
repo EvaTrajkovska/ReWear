@@ -3,10 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rewear/utils/colors.dart';
-// import 'package:provider/provider.dart';
-// import 'package:rewear/providers/user_provider.dart';
-// import 'package:rewear/utils/colors.dart';
-// import 'package:rewear/model/user.dart' as model;
 import 'package:rewear/utils/home_screen_items.dart';
 
 class MobileScreenLayout extends StatefulWidget {
@@ -17,25 +13,7 @@ class MobileScreenLayout extends StatefulWidget {
 }
 
 class _MobileScreenLayoutState extends State<MobileScreenLayout> {
-  // String username = "";
-  //  @override
-  //   void initState(){
-  //    super.initState();
-  //    getUsername();
-  //  }
-  //
-  //  void getUsername() async{R
-  //   DocumentSnapshot snap = await FirebaseFirestore.instance
-  //       .collection('users')
-  //       .doc(FirebaseAuth.instance.currentUser!.uid)
-  //       .get();
-  //   print(snap.data());
-  //   setState(() {
-  //     username = (snap.data() as Map<String,dynamic>)['username'];
-  //
-  //   });
-  //
-  //  }
+
   int _page = 0;
   late PageController pageController;
   @override

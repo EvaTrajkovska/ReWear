@@ -132,42 +132,49 @@ class _FeedScreenState extends State<FeedScreen> {
                 ),
               ],
             ),
-      body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-        stream: FirebaseFirestore.instance.collection('posts').snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (!snapshot.hasData) {
-            return const Text('No data available');
-          }
+      body: Container(
+        margin: EdgeInsets.symmetric(
+          horizontal: width > webScreenSize ? width * 0.15 : 0,
+          vertical: width > webScreenSize ? 15 : 0,
+        ),
+        child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+          stream: FirebaseFirestore.instance.collection('posts').snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (!snapshot.hasData) {
+              return const Text('No data available');
+            }
 
-          var allPosts = snapshot.data!.docs;
-          List<DocumentSnapshot<Map<String, dynamic>>> premiumPosts = [];
-          List<DocumentSnapshot<Map<String, dynamic>>> regularPosts = [];
+            var allPosts = snapshot.data!.docs;
+            List<DocumentSnapshot<Map<String, dynamic>>> premiumPosts = [];
+            List<DocumentSnapshot<Map<String, dynamic>>> regularPosts = [];
 
-          return FutureBuilder(
-            future: _populatePostLists(allPosts, premiumPosts, regularPosts),
-            builder: (context, AsyncSnapshot<void> postListSnapshot) {
-              if (postListSnapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              }
+            return FutureBuilder(
+              future: _populatePostLists(allPosts, premiumPosts, regularPosts),
+              builder: (context, AsyncSnapshot<void> postListSnapshot) {
+                if (postListSnapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-              return Column(
-                children: [
-                  Expanded(
-                    child: _buildPostGrid(regularPosts, false, context,
-                        regularPostsController, 'Избрани за тебе'),
-                  ),
-                  Expanded(
-                    child: _buildPostGrid(premiumPosts, true, context,
-                        premiumPostsController, 'Наш избор '),
-                  ),
-                ],
-              );
-            },
-          );
-        },
+                return Column(
+                  children: [
+                    Expanded(
+                      child: _buildPostGrid(regularPosts, false, context,
+                          regularPostsController, 'Избрани за тебе'),
+                    ),
+                    Expanded(
+                      child: _buildPostGrid(premiumPosts, true, context,
+                          premiumPostsController, 'Наш избор '),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }

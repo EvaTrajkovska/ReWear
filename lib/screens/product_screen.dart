@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +8,7 @@ import 'package:rewear/providers/user_provider.dart';
 import 'package:rewear/resources/database_method.dart';
 import 'package:rewear/screens/chat_screen.dart';
 import 'package:rewear/screens/comments_screen.dart';
+import 'package:rewear/screens/profile_screen.dart';
 import 'package:rewear/utils/colors.dart';
 import 'package:rewear/utils/dimensions.dart';
 import 'package:rewear/model/user.dart' as model;
@@ -318,8 +320,25 @@ class _ProductScreenState extends State<ProductScreen> {
                     const SizedBox(height: 50),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        RateButton(
+                      children: [ FirebaseAuth.instance.currentUser!.uid == widget.snap!['uid']
+                          ? RateButton(text: postData != null &&
+                          postData!.containsKey('sold') &&
+                          postData!['sold'] == true
+                          ? 'Огласи повторно'
+                          : 'Продаден производ',                      function: () async {
+                      if (postData != null && postData!.containsKey('postId')) {
+                        await FireStoreMethods().markProductAsSold(postData!['postId']);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ProfileScreen(uid: postData!['uid'].toString()),
+                          ),
+                        );
+                      }
+                      }
+                      )
+                          :RateButton(
                           text: 'Контактирај продавач',
                           function: () async {
                             Navigator.push(

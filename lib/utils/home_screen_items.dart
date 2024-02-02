@@ -5,6 +5,7 @@ import 'package:rewear/screens/chat_screen.dart';
 import 'package:rewear/screens/chats_screen.dart';
 import 'package:rewear/screens/favorites_screen.dart';
 import 'package:rewear/screens/feed.dart';
+import 'package:rewear/screens/product_screen.dart';
 import 'package:rewear/screens/profile_screen.dart';
 import 'package:rewear/widgets/chat_messages.dart';
 

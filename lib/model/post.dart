@@ -11,9 +11,9 @@ class Post {
   final DateTime datePublished;
   final String postUrl;
   final List saves;
+  bool sold;
 
-
-  const Post({
+   Post({
     required this.title,
     required this.description,
     required this.price,
@@ -24,6 +24,7 @@ class Post {
     required this.datePublished,
     required this.postUrl,
     required this.saves,
+    this.sold = false,
   });
 
   static Post fromSnap(DocumentSnapshot snap) {
@@ -40,6 +41,7 @@ class Post {
       username: snapshot["username"],
       postUrl: snapshot['postUrl'],
       saves: snapshot["saves"],
+      sold: snapshot["sold"]
     );
   }
 
@@ -54,6 +56,7 @@ class Post {
         "datePublished": datePublished,
         'postUrl': postUrl,
         'saves' : saves,
+        'sold':sold
       };
 
 

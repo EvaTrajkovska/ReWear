@@ -50,6 +50,7 @@ class AuthenticationMethods {
           rating: [],
           likes: [],
           isPremium: isPremium,
+          soldItems: 0
         );
 
         // Add the user to Firestore
