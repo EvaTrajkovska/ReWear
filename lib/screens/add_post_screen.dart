@@ -33,164 +33,285 @@ class _AddPostScreenState extends State<AddPostScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+
   void _showPriceDialog(BuildContext context) {
-    showDialog(
-      context: context,
+    Navigator.of(context).push(MaterialPageRoute<void>(
+      fullscreenDialog: true,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Enter Price"),
-          content: TextField(
-            controller: _priceController,
-            keyboardType: TextInputType.numberWithOptions(decimal: false),
-            inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.digitsOnly,
-            ],
-            decoration: InputDecoration(
-              hintText: 'Enter the price here',
+        return Scaffold(
+          appBar: AppBar(
+            title: Text("Внеси цена"),
+          ),
+          body: Container(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                TextField(
+                  controller: _priceController,
+                  autofocus: true,
+                  keyboardType: TextInputType.numberWithOptions(decimal: false),
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                  decoration: InputDecoration(
+                    labelText: 'Цена',
+                    border: OutlineInputBorder(),
+                    hintText: 'Внеси цена тука!',
+                  ),
+                ),
+                SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        child: Text('Откажи'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey,
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: () {
+                          _priceController.clear();
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: ElevatedButton(
+                        child: Text('Зачувај'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: greenColor,
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: () {
+                          String priceText = _priceController.text;
+                          int? enteredPrice = int.tryParse(priceText);
+                          if (enteredPrice != null) {
+                            setState(() {
+                              _price = enteredPrice;
+                            });
+                            Navigator.of(context).pop();
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-          actions: <Widget>[
-            ElevatedButton(
-              child: Text("OK"),
-              onPressed: () {
-                String priceText = _priceController.text;
-                int? enteredPrice = int.tryParse(priceText);
-                if (enteredPrice != null) {
-                  setState(() {
-                    _price = enteredPrice;
-                  });
-                  Navigator.of(context).pop();
-                }
-              },
-            ),
-            SimpleDialogOption(
-              child: const Text("Cancel"),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
         );
       },
-    );
+    ));
   }
 
   void _showDescription(BuildContext context) {
-    showDialog(
-      context: context,
+    Navigator.of(context).push(MaterialPageRoute<void>(
+      fullscreenDialog: true,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Внеси опис"),
-          content: TextField(
-            controller: _descriptionController,
+        return Scaffold(
+          appBar: AppBar(
+            title: Text("Внеси опис"),
           ),
-          actions: <Widget>[
-            ElevatedButton(
-              child: Text("OK"),
-              onPressed: () async {
-                setState(() {
-                  _decription = _descriptionController.text;
-                });
-
-                Navigator.of(context).pop();
-              },
+          body: Container(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _descriptionController,
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      labelText: 'Опис',
+                      border: OutlineInputBorder(),
+                      hintText: 'Внесете го вашиот опис тука',
+                    ),
+                    maxLength: 200,
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
+                  ),
+                ),
+                SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        child: Text('Откажи'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey,
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: () {
+                          _descriptionController.clear();
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: ElevatedButton(
+                        child: Text('Зачувај'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: greenColor,
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _decription = _descriptionController.text;
+                          });
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            SimpleDialogOption(
-              padding: const EdgeInsets.all(20),
-              child: const Text("Откажи"),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            )
-          ],
+          ),
         );
       },
-    );
+    ));
   }
 
   void _showTitle(BuildContext context) {
-    final EdgeInsets viewInsets = MediaQuery.of(context).viewInsets;
-    showDialog(
-      context: context,
+    Navigator.of(context).push(MaterialPageRoute<void>(
+      fullscreenDialog: true,
       builder: (BuildContext context) {
-        return Align(
-          alignment: Alignment.center,
-          child: Padding(
-            padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
-            child: Dialog(
-              child: AlertDialog(
-                title: Text("Внеси наслов"),
-                content: SingleChildScrollView(
+        return Scaffold(
+          appBar: AppBar(
+            title: Text("Внеси наслов"),
+          ),
+          body: Container(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                Expanded(
                   child: TextField(
                     controller: _titleController,
+                    autofocus: true,
                     decoration: InputDecoration(
-                      hintText: 'Внеси го твојот наслов тука',
+                      labelText: 'Наслов',
+                      border: OutlineInputBorder(),
+                      hintText: 'Внеси го твојот наслов тука!',
                     ),
+                    maxLength: 20,
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
                   ),
                 ),
-                actions: <Widget>[
-                  ElevatedButton(
-                    child: Text("OK"),
-                    onPressed: () {
-                      setState(() {
-                        _title = _titleController.text;
-                      });
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  TextButton(
-                    child: Text("Откажи"),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
-              ),
+                SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        child: Text('Откажи'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey,
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: () {
+                          _titleController.clear();
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: ElevatedButton(
+                        child: Text('Зачувај'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: greenColor,
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _title = _titleController.text;
+                          });
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         );
       },
-    );
+    ));
   }
 
   _selectImage(BuildContext parentContext) async {
-    return showDialog(
-      context: parentContext,
+    Navigator.of(parentContext).push(MaterialPageRoute<void>(
+      fullscreenDialog: true,
       builder: (BuildContext context) {
-        return SimpleDialog(
-          title: const Text('Create a Post'),
-          children: <Widget>[
-            SimpleDialogOption(
-                padding: const EdgeInsets.all(20),
-                child: const Text('Употреби камера'),
-                onPressed: () async {
-                  Navigator.pop(context);
-                  Uint8List file = await pickImage(ImageSource.camera);
-                  setState(() {
-                    _file = file;
-                  });
-                }),
-            SimpleDialogOption(
-                padding: const EdgeInsets.all(20),
-                child: const Text('Избери слика од галерија'),
-                onPressed: () async {
-                  Navigator.of(context).pop();
-                  Uint8List file = await pickImage(ImageSource.gallery);
-                  setState(() {
-                    _file = file;
-                  });
-                }),
-            SimpleDialogOption(
-              padding: const EdgeInsets.all(20),
-              child: const Text("Откажи"),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            )
-          ],
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Create a Post'),
+            leading: IconButton(
+              icon: Icon(Icons.close),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                ListTile(
+                  leading: Icon(Icons.camera),
+                  title: Text('Употреби камера'),
+                  onTap: () async {
+                    Navigator.pop(context);
+                    Uint8List file = await pickImage(ImageSource.camera);
+                    setState(() {
+                      _file = file;
+                    });
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.photo_library),
+                  title: Text('Избери слика од галерија'),
+                  onTap: () async {
+                    Navigator.pop(context);
+                    Uint8List file = await pickImage(ImageSource.gallery);
+                    setState(() {
+                      _file = file;
+                    });
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.cancel),
+                  title: Text('Откажи'),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
+          ),
         );
       },
-    );
+    ));
   }
 
   @override
@@ -220,7 +341,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
               ),
             ),
       body: Padding(
-        padding: const EdgeInsets.all(18.0),
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

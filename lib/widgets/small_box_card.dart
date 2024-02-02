@@ -40,7 +40,7 @@ Widget buildPostCard(BuildContext context, Map<String, dynamic> post) {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                post['description'] ?? 'No description',
+                post['title'] ?? '',
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
