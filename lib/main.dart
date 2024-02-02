@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:rewear/providers/firebase_provider.dart';
+import 'package:rewear/providers/page_provider.dart';
 import 'package:rewear/providers/user_provider.dart';
 import 'package:rewear/responsive/mobile_screen_layout.dart';
 import 'package:rewear/responsive/web_screen_layout.dart';
@@ -13,9 +14,11 @@ import 'package:rewear/screens/login_screen.dart';
 import 'package:rewear/screens/signup_screen.dart';
 import 'package:rewear/responsive/responsive_layout.dart';
 import 'package:rewear/utils/colors.dart';
-Future<void> _backgroundMessageHandler( RemoteMessage message ) async{
+
+Future<void> _backgroundMessageHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
 }
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {
@@ -48,6 +51,9 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider(
             create: (_) => FirebaseProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => PageProvider(),
           )
         ],
         child: MaterialApp(

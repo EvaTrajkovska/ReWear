@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:firebase_auth/firebase_auth.dart' as AuthUser;
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:rewear/providers/user_provider.dart';
 import 'package:rewear/model/user.dart';
 import 'package:rewear/resources/database_method.dart';
 import 'package:rewear/screens/login_screen.dart';
+import 'package:rewear/screens/profile_screen.dart';
 import 'package:rewear/utils/colors.dart';
 import 'package:rewear/utils/dimensions.dart';
 import 'package:rewear/utils/imagePickerAndSnackBar.dart';
@@ -26,6 +28,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
   String _title = '';
   String _decription = '';
   int _price = 0;
+  String currentuser = AuthUser.FirebaseAuth.instance.currentUser?.uid ?? '';
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
@@ -463,39 +467,26 @@ class _AddPostScreenState extends State<AddPostScreen> {
         username,
       );
       if (res == "success") {
-        setState(() {});
-        if (context.mounted) {
-          showSnackBar(
-            context,
-            'Posted!',
-          );
-        }
+        // Clear the form
+        _titleController.clear();
+        _descriptionController.clear();
+        _priceController.clear();
+        setState(() {
+          _file = null;
+          _title = '';
+          _decription = '';
+          _price = 0;
+        });
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+              builder: (context) => ProfileScreen(uid: currentuser)),
+        );
       } else {
-        if (context.mounted) {
-          showSnackBar(context, res);
-        }
+        showSnackBar(context, res);
       }
     } catch (err) {
-      showSnackBar(
-        context,
-        err.toString(),
-      );
+      showSnackBar(context, err.toString());
     }
-
-    _titleController.clear();
-    _descriptionController.clear();
-    _priceController.clear();
-    setState(() {
-      _file = null;
-      _title = '';
-      _decription = '';
-      _price = 0;
-    });
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(
-          builder: (context) =>
-              AddPostScreen()), // to do change it when home screen is ready
-      (Route<dynamic> route) => false,
-    );
   }
 }

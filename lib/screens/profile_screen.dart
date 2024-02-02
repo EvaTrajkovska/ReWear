@@ -151,9 +151,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   color: selectedRating > index ? greenColor : Colors.grey,
                 ),
                 onPressed: () {
-                  String ratedUid = widget.uid;
-
-                  Navigator.of(context).pop(index + 1);
+                  selectedRating = index + 1;
+                  Navigator.of(context).pop(selectedRating);
                 },
               );
             }),
@@ -165,21 +164,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
         String raterUid = FirebaseAuth.instance.currentUser?.uid ?? '';
         String ratedUid = widget.uid;
 
-        String result =
-            await FireStoreMethods().addRating(raterUid, ratedUid, rating);
+        Map<String, dynamic> ratingUpdate = {
+          'raterUid': raterUid,
+          'rating': rating
+        };
+
+        String result = await firestoreMethods.updateUserRating(
+            ratedUid, raterUid, ratingUpdate);
 
         if (result == 'success') {
-          setState(() {
-            List<dynamic> updatedRatingsList =
-                List.from(userData['ratings'] ?? []);
-            updatedRatingsList.add({'raterUid': raterUid, 'rating': rating});
+          DocumentSnapshot updatedUserData = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(ratedUid)
+              .get();
 
-            userData['ratings'] = updatedRatingsList;
-
-            averageRating = calculateAverageRating(updatedRatingsList);
-          });
+          if (updatedUserData.exists) {
+            setState(() {
+              userData = updatedUserData.data() as Map<String, dynamic>? ?? {};
+              averageRating = calculateAverageRating(
+                  userData['ratings'] as List<dynamic>? ?? []);
+            });
+          }
         } else {
-          result = 'rating fai';
+          showSnackBar(context, 'Failed to rate');
         }
       }
     });
@@ -388,25 +395,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           return SizedBox(
                               child: GestureDetector(
                             onTap: () {
-                              // This delays the navigation by 1 second as per your existing code
                               Future.delayed(Duration(seconds: 1), () async {
                                 DocumentSnapshot snap =
                                     (snapshot.data! as dynamic).docs[index];
                                 Map<String, dynamic> postData =
                                     snap.data() as Map<String, dynamic>;
 
-                                // Add the postId to the postData map, assuming the document ID is the postId
                                 postData['postId'] = snap.id;
 
                                 await Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => ProductScreen(
-                                      snap:
-                                          postData, // Pass the postData map to the ProductScreen
+                                      snap: postData,
                                     ),
                                   ),
                                 );
+                                getData();
                               });
                             },
                             child: Image(

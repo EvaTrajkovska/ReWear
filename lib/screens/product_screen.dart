@@ -200,7 +200,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                   icon: widget.snap?['likes'].contains(user.uid)
                                       ? const Icon(
                                           Icons.favorite,
-                                          color: Colors.red,
+                                          // color: Colors.red,
                                         )
                                       : const Icon(
                                           Icons.favorite_border,
@@ -234,15 +234,28 @@ class _ProductScreenState extends State<ProductScreen> {
                               },
                             ),
                             IconButton(
-                                icon: widget.snap!['saves'].contains(user.uid)
-                                    ? const Icon(
-                                        Icons.bookmark,
-                                        color: Colors.black,
-                                      )
-                                    : const Icon(
-                                        Icons.bookmark_border,
-                                      ),
-                                onPressed: () async {
+                              icon: user.uid == widget.snap!['uid']
+                                  ? const Icon(
+                                      Icons.delete,
+                                      // color: Colors.red,
+                                    )
+                                  : widget.snap!['saves'].contains(user.uid)
+                                      ? const Icon(
+                                          Icons.bookmark,
+                                          color: Colors.black,
+                                        )
+                                      : const Icon(
+                                          Icons.bookmark_border,
+                                        ),
+                              onPressed: () async {
+                                if (user.uid == widget.snap!['uid']) {
+                                  // Logic to delete the post
+                                  await FireStoreMethods().deletePost(
+                                      widget.snap!['postId'].toString());
+                                  Navigator.of(context)
+                                      .pop(); // This assumes you're on a details screen
+                                } else {
+                                  // Logic to save the post
                                   await FireStoreMethods().savePost(
                                     widget.snap!['postId'].toString(),
                                     user.uid,
@@ -253,7 +266,9 @@ class _ProductScreenState extends State<ProductScreen> {
                                         ? widget.snap!['saves'].remove(user.uid)
                                         : widget.snap!['saves'].add(user.uid);
                                   });
-                                }),
+                                }
+                              },
+                            ),
                           ],
                         ),
                       ),

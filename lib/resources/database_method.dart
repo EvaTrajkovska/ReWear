@@ -80,10 +80,14 @@ class FireStoreMethods {
     List<Map<String, dynamic>> savedPosts = [];
 
     try {
-      QuerySnapshot querySnapshot = await _firestore.collection('posts').where('saves', arrayContains: userId).get();
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('posts')
+          .where('saves', arrayContains: userId)
+          .get();
 
       for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
-        Map<String, dynamic> post = documentSnapshot.data() as Map<String, dynamic>;
+        Map<String, dynamic> post =
+            documentSnapshot.data() as Map<String, dynamic>;
         savedPosts.add(post);
       }
     } catch (err) {
@@ -92,9 +96,6 @@ class FireStoreMethods {
 
     return savedPosts;
   }
-
-
-
 
   Future<String> postComment(
       String postId, String text, String uid, String name) async {
@@ -147,7 +148,6 @@ class FireStoreMethods {
         'rating': ratingValue,
       };
 
-      // Add the rating to the 'ratings' array of the rated user
       await _firestore.collection('users').doc(ratedUid).update({
         'ratings': FieldValue.arrayUnion([rating])
       });
@@ -157,5 +157,35 @@ class FireStoreMethods {
       res = err.toString();
     }
     return res;
+  }
+
+  Future<String> updateUserRating(String ratedUid, String raterUid,
+      Map<String, dynamic> ratingUpdate) async {
+    try {
+      DocumentReference userRef = _firestore.collection('users').doc(ratedUid);
+      DocumentSnapshot snapshot = await userRef.get();
+
+      if (snapshot.exists) {
+        var userData = snapshot.data() as Map<String, dynamic>;
+        List<dynamic> ratings = userData['ratings'] ?? [];
+
+        int existingRatingIndex =
+            ratings.indexWhere((r) => r['raterUid'] == raterUid);
+
+        if (existingRatingIndex != -1) {
+          ratings[existingRatingIndex] = ratingUpdate;
+        } else {
+          ratings.add(ratingUpdate);
+        }
+
+        await userRef.update({'ratings': ratings});
+        return 'success';
+      } else {
+        return 'User not found';
+      }
+    } catch (e) {
+      print(e.toString());
+      return 'Failed to update rating';
+    }
   }
 }

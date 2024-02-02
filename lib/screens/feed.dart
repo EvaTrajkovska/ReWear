@@ -16,6 +16,15 @@ class FeedScreen extends StatefulWidget {
 
 class _FeedScreenState extends State<FeedScreen> {
   Map<String, Future<bool>> userPremiumStatusCache = {};
+  final ScrollController regularPostsController = ScrollController();
+  final ScrollController premiumPostsController = ScrollController();
+
+  @override
+  void dispose() {
+    regularPostsController.dispose();
+    premiumPostsController.dispose();
+    super.dispose();
+  }
 
   Future<bool> _checkIfUserIsPremium(String userId) async {
     if (!userPremiumStatusCache.containsKey(userId)) {
@@ -29,10 +38,10 @@ class _FeedScreenState extends State<FeedScreen> {
   }
 
   Future<void> _populatePostLists(
-      List<DocumentSnapshot<Map<String, dynamic>>> allPosts,
-      List<DocumentSnapshot<Map<String, dynamic>>> premiumPosts,
-      List<DocumentSnapshot<Map<String, dynamic>>> regularPosts,
-      ) async {
+    List<DocumentSnapshot<Map<String, dynamic>>> allPosts,
+    List<DocumentSnapshot<Map<String, dynamic>>> premiumPosts,
+    List<DocumentSnapshot<Map<String, dynamic>>> regularPosts,
+  ) async {
     for (var post in allPosts) {
       var isPremium = await _checkIfUserIsPremium(post['uid']);
       if (isPremium) {
@@ -43,32 +52,54 @@ class _FeedScreenState extends State<FeedScreen> {
     }
   }
 
-  Widget _buildPostGrid(
-      List<DocumentSnapshot> posts, bool isPremiumList, BuildContext context) {
-    return SliverGrid(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        childAspectRatio: 0.7,
-      ),
-      delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-          return FutureBuilder<bool>(
-            future: _checkIfUserIsPremium(posts[index]['uid']),
-            builder: (context, AsyncSnapshot<bool> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Container();
-              }
-              var data = posts[index].data() as Map<String, dynamic>?;
-              if (snapshot.data == isPremiumList && data != null) {
-                return buildPostCard(context, data);
-              } else {
-                return Container();
-              }
-            },
-          );
-        },
-        childCount: posts.length,
-      ),
+  Widget _buildPostGrid(List<DocumentSnapshot> posts, bool isPremiumList,
+      BuildContext context, ScrollController controller, String headerText) {
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Center(
+            child: Text(
+              headerText,
+              style: TextStyle(
+                  fontSize: 24, color: greenColor, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+        Expanded(
+          child: CustomScrollView(
+            controller: controller,
+            slivers: [
+              SliverGrid(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  childAspectRatio: 0.7,
+                ),
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    return FutureBuilder<bool>(
+                      future: _checkIfUserIsPremium(posts[index]['uid']),
+                      builder: (context, AsyncSnapshot<bool> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Container();
+                        }
+                        var data = posts[index].data() as Map<String, dynamic>?;
+                        if (snapshot.data == isPremiumList && data != null) {
+                          return buildPostCard(context, data);
+                        } else {
+                          return Container();
+                        }
+                      },
+                    );
+                  },
+                  childCount: posts.length,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -81,26 +112,26 @@ class _FeedScreenState extends State<FeedScreen> {
       appBar: width > webScreenSize
           ? null
           : AppBar(
-        backgroundColor: mobileBackgroundColor,
-        title: SvgPicture.asset(
-          'assets/ReWear.svg',
-          height: 100,
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.search,
-              color: greenColor,
+              backgroundColor: mobileBackgroundColor,
+              title: SvgPicture.asset(
+                'assets/ReWear.svg',
+                height: 100,
+              ),
+              actions: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.search,
+                    color: greenColor,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SearchScreen()),
+                    );
+                  },
+                ),
+              ],
             ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SearchScreen()),
-              );
-            },
-          ),
-        ],
-      ),
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: FirebaseFirestore.instance.collection('posts').snapshots(),
         builder: (context, snapshot) {
@@ -122,45 +153,16 @@ class _FeedScreenState extends State<FeedScreen> {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              return CustomScrollView(
-                slivers: [
-                  const SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Center(
-                        child: Text(
-                          'Избрани за тебе',
-                          style: TextStyle(
-                              fontSize: 24,
-                              color: greenColor,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
+              return Column(
+                children: [
+                  Expanded(
+                    child: _buildPostGrid(regularPosts, false, context,
+                        regularPostsController, 'Избрани за тебе'),
                   ),
-                  _buildPostGrid(regularPosts, false, context),
-                  const SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 16.0),
-                      child: Center(
-                        child: Text('Наш избор',
-                            style: TextStyle(
-                                fontSize: 24,
-                                color: greenColor,
-                                fontWeight: FontWeight.bold)),
-                      ),
-                    ),
+                  Expanded(
+                    child: _buildPostGrid(premiumPosts, true, context,
+                        premiumPostsController, 'Наш избор '),
                   ),
-                  const SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
-                      child: Center(
-                        child: Text('Артикли на денот',
-                            style: TextStyle(fontSize: 15)),
-                      ),
-                    ),
-                  ),
-                  _buildPostGrid(premiumPosts, true, context),
                 ],
               );
             },
