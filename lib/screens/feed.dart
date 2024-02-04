@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rewear/utils/dimensions.dart';
-import 'package:rewear/widgets/post_card.dart';
 import 'package:rewear/screens/search_screen.dart';
 import 'package:rewear/utils/colors.dart';
 import 'package:rewear/widgets/small_box_card.dart';
@@ -44,11 +43,14 @@ class _FeedScreenState extends State<FeedScreen> {
   ) async {
     for (var post in allPosts) {
       var isPremium = await _checkIfUserIsPremium(post['uid']);
+      var isSold = post['sold'] ?? false;
+      if(!isSold){
       if (isPremium) {
         premiumPosts.add(post);
       } else {
         regularPosts.add(post);
-      }
+    }
+     }
     }
   }
 

@@ -10,21 +10,41 @@ Widget buildPostCard(BuildContext context, Map<String, dynamic> post) {
     child: Stack(
       alignment: Alignment.bottomCenter,
       children: [
-        Image.network(
-          post['postUrl'],
-          fit: BoxFit.fill,
-          width: double.infinity,
-          height: double.infinity,
+        Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(post['postUrl']),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: (post['sold'] == true)
+              ? Center(
+            child: Container(
+              decoration: BoxDecoration(
+                color:
+                Colors.black.withOpacity(0.5),
+              ),
+              padding: const EdgeInsets.all(8.0),
+              child: const Text(
+                'SOLD',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+            ),
+          )
+              : Container(),
         ),
         GestureDetector(
           onTap: () {
-            // This delays the navigation by 1 second as per your existing code
             Future.delayed(Duration(seconds: 1), () async {
               await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => ProductScreen(
-                    snap: post, // Ensure 'post' is not null here
+                    snap: post,
                   ),
                 ),
               );
