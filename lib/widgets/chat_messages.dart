@@ -30,12 +30,12 @@ class ChatMessages extends StatelessWidget {
                         ? MessageBubble(
                             isMe: isMe,
                             message: value.messages[index],
-                            isImage: false,
+                            // isImage: false,
                           )
                         : MessageBubble(
                             isMe: isMe,
                             message: value.messages[index],
-                            isImage: true,
+                            // isImage: true,
                           );
                   },
                 ),

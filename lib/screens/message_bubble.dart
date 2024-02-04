@@ -1,62 +1,92 @@
 import 'package:flutter/material.dart';
-import 'package:rewear/utils/colors.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import '../../model/message.dart';
+import '../../utils/colors.dart';
 
 class MessageBubble extends StatelessWidget {
   const MessageBubble({
     super.key,
     required this.isMe,
-    required this.isImage,
     required this.message,
   });
 
   final bool isMe;
-  final bool isImage;
   final Message message;
 
   @override
-  Widget build(BuildContext context) => Align(
-        alignment: isMe ? Alignment.topRight : Alignment.topLeft,
-        child: Container(
-          decoration: BoxDecoration(
-            color: isMe ? greenColor : Colors.grey,
-            borderRadius: isMe
-                ? const BorderRadius.only(
-                    topRight: Radius.circular(30),
-                    bottomRight: Radius.circular(30),
-                    topLeft: Radius.circular(30),
-                  )
-                : const BorderRadius.only(
-                    topRight: Radius.circular(30),
-                    bottomLeft: Radius.circular(30),
-                    topLeft: Radius.circular(30),
-                  ),
-          ),
-          margin: const EdgeInsets.only(top: 10, right: 10, left: 10),
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment:
-                isMe ? CrossAxisAlignment.start : CrossAxisAlignment.end,
-            children: [
-              isImage
-                  ? Container(
-                      height: 200,
-                      width: 200,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        image: DecorationImage(
-                          image: NetworkImage(message.content),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    )
-                  : Text(message.content,
-                      style: const TextStyle(color: Colors.white)),
-              const SizedBox(height: 5),
-            ],
-          ),
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: isMe ? Alignment.topRight : Alignment.topLeft,
+      child: Container(
+        decoration: BoxDecoration(
+          color: isMe ? greenColor : Colors.grey[300],
+          borderRadius: isMe
+              ? const BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                  bottomLeft: Radius.circular(12),
+                  topRight: Radius.circular(12),
+                )
+              : const BorderRadius.only(
+                  topRight: Radius.circular(12),
+                  bottomRight: Radius.circular(12),
+                  topLeft: Radius.circular(12),
+                ),
         ),
-      );
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+        child: _buildMessageContent(context),
+      ),
+    );
+  }
+
+  Widget _buildMessageContent(BuildContext context) {
+    switch (message.messageType) {
+      case MessageType.text:
+        // Text message
+        return Text(
+          message.content,
+          style: TextStyle(color: isMe ? Colors.white : Colors.black87),
+        );
+      case MessageType.image:
+        // Image message
+        return Image.network(message.content);
+      case MessageType.location:
+        // Location message
+        return InkWell(
+          onTap: () => _launchURL(message.content),
+          child: Container(
+            padding: const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              color: Colors.blueAccent,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Icon(Icons.location_on, color: Colors.white),
+                SizedBox(width: 8),
+                Text(
+                  'View Location',
+                  style: TextStyle(
+                    color: Colors.white,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      default:
+        // Unknown message type
+        return const SizedBox();
+    }
+  }
+
+  Future<void> _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 }

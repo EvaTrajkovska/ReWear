@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rewear/service/firebase_firestore_service.dart';
+import 'package:rewear/service/location_service.dart';
 import 'package:rewear/service/notification_service.dart';
 import 'package:rewear/utils/colors.dart';
 
@@ -64,6 +65,15 @@ class _ChatTextFieldState extends State<ChatTextField> {
               onPressed: _sendImage,
             ),
           ),
+          const SizedBox(width: 5),
+          CircleAvatar(
+            backgroundColor: greenColor,
+            radius: 20,
+            child: IconButton(
+              icon: const Icon(Icons.location_on, color: Colors.white),
+              onPressed: () => _sendLocation(context),
+            ),
+          ),
         ],
       );
 
@@ -73,10 +83,10 @@ class _ChatTextFieldState extends State<ChatTextField> {
         receiverId: widget.receiverId,
         content: controller.text,
       );
-       await notificationsService.sendNotification(
-         body: controller.text,
+      await notificationsService.sendNotification(
+        body: controller.text,
         senderId: FirebaseAuth.instance.currentUser!.uid,
-       );
+      );
       controller.clear();
       FocusScope.of(context).unfocus();
     }
@@ -94,6 +104,30 @@ class _ChatTextFieldState extends State<ChatTextField> {
       await notificationsService.sendNotification(
         body: 'image........',
         senderId: FirebaseAuth.instance.currentUser!.uid,
+      );
+    }
+  }
+
+  Future<void> _sendLocation(BuildContext context) async {
+    try {
+      final position = await LocationService().getCurrentLocation();
+      final String locationUrl =
+          "https://www.google.com/maps/search/?api=1&query=${position.latitude},${position.longitude}";
+
+      await FirebaseFirestoreService.addTextMessage(
+        receiverId: widget.receiverId,
+        content: locationUrl,
+      );
+      await notificationsService.sendNotification(
+        body: 'My location: $locationUrl',
+        senderId: FirebaseAuth.instance.currentUser!.uid,
+      );
+    } catch (e) {
+      // Handle the exception
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to get location: ${e.toString()}'),
+        ),
       );
     }
   }

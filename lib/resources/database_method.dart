@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -165,36 +163,33 @@ class FireStoreMethods {
   }
 
   Future<void> markProductAsSold(String postId) async {
-      String userId = FirebaseAuth.instance.currentUser!.uid;
+    String userId = FirebaseAuth.instance.currentUser!.uid;
 
-      DocumentSnapshot postSnapshot =
-      await FirebaseFirestore.instance.collection('posts').doc(postId).get();
-      Map<String, dynamic> postData = postSnapshot.data() as Map<String, dynamic>;
+    DocumentSnapshot postSnapshot =
+        await FirebaseFirestore.instance.collection('posts').doc(postId).get();
+    Map<String, dynamic> postData = postSnapshot.data() as Map<String, dynamic>;
 
-      bool isSold = postData['sold'] ?? false;
+    bool isSold = postData['sold'] ?? false;
 
-      bool newSoldValue = !isSold;
+    bool newSoldValue = !isSold;
 
+    await FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .update({'sold': newSoldValue});
+
+    if (newSoldValue) {
       await FirebaseFirestore.instance
-          .collection('posts')
-          .doc(postId)
-          .update({'sold': newSoldValue});
-
-      if (newSoldValue) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userId)
-            .update({'soldItems': FieldValue.increment(1)});
-      } else {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userId)
-            .update({'soldItems': FieldValue.increment(-1)});
-      }
-
+          .collection('users')
+          .doc(userId)
+          .update({'soldItems': FieldValue.increment(1)});
+    } else {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .update({'soldItems': FieldValue.increment(-1)});
+    }
   }
-
-
 
   Future<String> updateUserRating(String ratedUid, String raterUid,
       Map<String, dynamic> ratingUpdate) async {

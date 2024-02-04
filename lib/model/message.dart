@@ -15,26 +15,31 @@ class Message {
     required this.messageType,
   });
 
-  factory Message.fromJson(Map<String, dynamic> json) => Message(
-        receiverId: json['receiverId'],
-        senderId: json['senderId'],
-        sentTime: json['sentTime'].toDate(),
-        content: json['content'],
-        messageType: MessageType.fromJson(json['messageType']),
-      );
+  factory Message.fromJson(Map<String, dynamic> json) {
+    return Message(
+      receiverId: json['receiverId'],
+      senderId: json['senderId'],
+      sentTime: (json['sentTime']).toDate(),
+      content: json['content'],
+      messageType: MessageType.fromJson(json['messageType']),
+    );
+  }
 
-  Map<String, dynamic> toJson() => {
-        'receiverId': receiverId,
-        'senderId': senderId,
-        'sentTime': sentTime,
-        'content': content,
-        'messageType': messageType.toJson(),
-      };
+  Map<String, dynamic> toJson() {
+    return {
+      'receiverId': receiverId,
+      'senderId': senderId,
+      'sentTime': sentTime,
+      'content': content,
+      'messageType': messageType.toJson(),
+    };
+  }
 }
 
 enum MessageType {
   text,
-  image;
+  image,
+  location; // Add this line
 
   String toJson() => name;
 

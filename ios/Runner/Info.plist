@@ -51,5 +51,11 @@
 	<string>Microphone Usage</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Privacy Camera Usage</string>
+	<key>LSApplicationQueriesSchemes</key>
+<array>
+    <string>http</string>
+    <string>https</string>
+</array>
+
 </dict>
 </plist>
