@@ -114,7 +114,8 @@ class _ChatTextFieldState extends State<ChatTextField> {
       final String locationUrl =
           "https://www.google.com/maps/search/?api=1&query=${position.latitude},${position.longitude}";
 
-      await FirebaseFirestoreService.addTextMessage(
+      // Assuming you have a method addLocationMessage which sets the messageType to location
+      await FirebaseFirestoreService.addLocationMessage(
         receiverId: widget.receiverId,
         content: locationUrl,
       );
@@ -123,7 +124,6 @@ class _ChatTextFieldState extends State<ChatTextField> {
         senderId: FirebaseAuth.instance.currentUser!.uid,
       );
     } catch (e) {
-      // Handle the exception
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Failed to get location: ${e.toString()}'),

@@ -77,4 +77,33 @@ class FirebaseFirestoreService {
         .map((doc) => UserModel.User.fromJson(doc.data()))
         .toList();
   }
+
+  static Future<void> addLocationMessage({
+    required String receiverId,
+    required String content,
+  }) async {
+    final message = Message(
+      senderId: FirebaseAuth.instance.currentUser!.uid,
+      receiverId: receiverId,
+      content: content,
+      sentTime: DateTime.now(),
+      messageType: MessageType.location, // Set the messageType to location
+    );
+
+    // Add the message to Firestore
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(receiverId)
+        .collection('chat')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('messages')
+        .add(message.toJson());
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('chat')
+        .doc(receiverId)
+        .collection('messages')
+        .add(message.toJson());
+  }
 }

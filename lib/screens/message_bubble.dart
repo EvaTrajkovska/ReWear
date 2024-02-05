@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../model/message.dart';
@@ -42,51 +43,53 @@ class MessageBubble extends StatelessWidget {
   Widget _buildMessageContent(BuildContext context) {
     switch (message.messageType) {
       case MessageType.text:
-        // Text message
         return Text(
           message.content,
           style: TextStyle(color: isMe ? Colors.white : Colors.black87),
         );
       case MessageType.image:
-        // Image message
         return Image.network(message.content);
       case MessageType.location:
-        // Location message
-        return InkWell(
-          onTap: () => _launchURL(message.content),
-          child: Container(
-            padding: const EdgeInsets.all(8.0),
-            decoration: BoxDecoration(
-              color: Colors.blueAccent,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Icon(Icons.location_on, color: Colors.white),
-                SizedBox(width: 8),
-                Text(
-                  'View Location',
-                  style: TextStyle(
-                    color: Colors.white,
-                    decoration: TextDecoration.underline,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
+        return _buildLocationContent(context, message.content);
       default:
-        // Unknown message type
-        return const SizedBox();
+        return SizedBox.shrink();
     }
   }
 
-  Future<void> _launchURL(String url) async {
+  Widget _buildLocationContent(BuildContext context, String url) {
+    return RichText(
+      text: TextSpan(
+        children: [
+          WidgetSpan(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Icon(Icons.location_on,
+                  color: isMe ? Colors.white : Colors.blue),
+            ),
+          ),
+          TextSpan(
+            text: 'Location: Tap to view',
+            style: TextStyle(
+              color: isMe ? Colors.white : Colors.blue,
+              decoration: TextDecoration.underline,
+            ),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () => _launchURL(context, url),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _launchURL(BuildContext context, String url) async {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      throw 'Could not launch $url';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Could not launch $url'),
+        ),
+      );
     }
   }
 }
