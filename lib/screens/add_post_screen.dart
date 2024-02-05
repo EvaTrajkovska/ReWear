@@ -328,9 +328,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
     final User user = userProvider.getUser;
     String username = user.username ?? 'No Name';
     final width = MediaQuery.of(context).size.width;
+    final bottomPadding = MediaQuery.of(context).viewInsets.bottom;
 
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
       appBar: width > webScreenSize
           ? null
           : AppBar(
@@ -340,9 +341,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 height: 100,
               ),
             ),
-      body: Padding(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.only(bottom: bottomPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
