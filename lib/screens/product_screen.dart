@@ -12,9 +12,7 @@ import 'package:rewear/screens/profile_screen.dart';
 import 'package:rewear/utils/colors.dart';
 import 'package:rewear/utils/dimensions.dart';
 import 'package:rewear/model/user.dart' as model;
-import 'package:rewear/utils/imagePickerAndSnackBar.dart';
 import 'package:rewear/widgets/rate_button.dart';
-import 'package:rewear/widgets/user_profile_header.dart';
 import 'package:rewear/widgets/like_animation.dart';
 
 class ProductScreen extends StatefulWidget {
@@ -40,39 +38,6 @@ class _ProductScreenState extends State<ProductScreen> {
       //loadSavedPosts();
     }
   }
-  // fetchCommentLen() async {
-  //   try {
-  //     final postId = widget.snap?['postId'];
-  //     if (postId != null) {
-  //       QuerySnapshot snap = await FirebaseFirestore.instance
-  //           .collection('posts')
-  //           .doc(postId)
-  //           .collection('comments')
-  //           .get();
-  //       commentLen = snap.docs.length;
-  //     } else {
-  //       print('snap is null or does not contain a valid postId');
-  //     }
-  //   } catch (err) {
-  //     showSnackBar(
-  //       context,
-  //       err.toString(),
-  //     );
-  //   }
-  //   setState(() {});
-  // }
-
-  // deletePost(String postId) async {
-  //   try {
-  //     await FireStoreMethods().deletePost(postId);
-  //   } catch (err) {
-  //     showSnackBar(
-  //       context,
-  //       err.toString(),
-  //     );
-  //   }
-  // }
-
   Future<void> fetchPostData() async {
     try {
       String postId = widget.snap?['postId'];
@@ -111,10 +76,6 @@ class _ProductScreenState extends State<ProductScreen> {
       isLikeAnimating = false;
     });
   }
-
-  // void savePost() async {
-  //   // Your logic to handle save action
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -328,7 +289,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           : 'Продаден производ',                      function: () async {
                       if (postData != null && postData!.containsKey('postId')) {
                         await FireStoreMethods().markProductAsSold(postData!['postId']);
-                        Navigator.push(
+                        Navigator.pop(
                           context,
                           MaterialPageRoute(
                             builder: (context) =>

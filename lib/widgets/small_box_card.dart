@@ -40,7 +40,7 @@ Widget buildPostCard(BuildContext context, Map<String, dynamic> post) {
         GestureDetector(
           onTap: () {
             Future.delayed(Duration(seconds: 1), () async {
-              await Navigator.push(
+              await Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => ProductScreen(

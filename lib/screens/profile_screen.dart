@@ -138,6 +138,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+
   void showRatingDialog(BuildContext context) {
     final firestoreMethods = FireStoreMethods();
     int selectedRating = 0;
@@ -196,6 +197,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
+
+
   double averageRating = 0;
   @override
   Widget build(BuildContext context) {
@@ -247,10 +250,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ? null
                 : AppBar(
                     backgroundColor: coolGrey,
-                    title: SvgPicture.asset(
-                      'assets/ReWear.svg',
-                      height: 100,
-                    ),
+                title: SvgPicture.asset(
+                  'assets/ReWear.svg',
+                  height: 100,
+                ),
                   ),
             body: SingleChildScrollView(
               child: Column(

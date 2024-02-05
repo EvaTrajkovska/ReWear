@@ -9,11 +9,10 @@ import 'package:rewear/providers/page_provider.dart';
 import 'package:rewear/providers/user_provider.dart';
 import 'package:rewear/responsive/mobile_screen_layout.dart';
 import 'package:rewear/responsive/web_screen_layout.dart';
-import 'package:rewear/screens/add_post_screen.dart';
 import 'package:rewear/screens/login_screen.dart';
-import 'package:rewear/screens/signup_screen.dart';
 import 'package:rewear/responsive/responsive_layout.dart';
 import 'package:rewear/utils/colors.dart';
+
 
 Future<void> _backgroundMessageHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -69,7 +68,7 @@ class MyApp extends StatelessWidget {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.active) {
                 if (snapshot.hasData) {
-                  return ResponsiveLayout(
+                  return const ResponsiveLayout(
                     mobileScreenLayout: MobileScreenLayout(),
                     webScreenLayout: WebScreenLayout(),
                   );
@@ -89,6 +88,7 @@ class MyApp extends StatelessWidget {
               return const LoginScreen();
             },
           ),
+
         ));
   }
 }

@@ -14,6 +14,7 @@ class FeedScreen extends StatefulWidget {
 }
 
 class _FeedScreenState extends State<FeedScreen> {
+
   Map<String, Future<bool>> userPremiumStatusCache = {};
   final ScrollController regularPostsController = ScrollController();
   final ScrollController premiumPostsController = ScrollController();
@@ -63,7 +64,7 @@ class _FeedScreenState extends State<FeedScreen> {
           child: Center(
             child: Text(
               headerText,
-              style: TextStyle(
+              style: const TextStyle(
                   fontSize: 24, color: greenColor, fontWeight: FontWeight.bold),
             ),
           ),
@@ -104,7 +105,6 @@ class _FeedScreenState extends State<FeedScreen> {
       ],
     );
   }
-
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -113,27 +113,7 @@ class _FeedScreenState extends State<FeedScreen> {
       backgroundColor: width > webScreenSize ? coolGrey : mobileBackgroundColor,
       appBar: width > webScreenSize
           ? null
-          : AppBar(
-              backgroundColor: mobileBackgroundColor,
-              title: SvgPicture.asset(
-                'assets/ReWear.svg',
-                height: 100,
-              ),
-              actions: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.search,
-                    color: greenColor,
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SearchScreen()),
-                    );
-                  },
-                ),
-              ],
-            ),
+          : _buildAppBar(),
       body: Container(
         margin: EdgeInsets.symmetric(
           horizontal: width > webScreenSize ? width * 0.15 : 0,
@@ -164,8 +144,9 @@ class _FeedScreenState extends State<FeedScreen> {
                 return Column(
                   children: [
                     Expanded(
+
                       child: _buildPostGrid(regularPosts, false, context,
-                          regularPostsController, 'Избрани за тебе'),
+                          regularPostsController, 'Избрани за тебе',),
                     ),
                     Expanded(
                       child: _buildPostGrid(premiumPosts, true, context,
@@ -180,4 +161,26 @@ class _FeedScreenState extends State<FeedScreen> {
       ),
     );
   }
+  AppBar _buildAppBar() => AppBar(
+    backgroundColor: mobileBackgroundColor,
+    title:  SvgPicture.asset(
+        'assets/ReWear.svg',
+        height: 100,
+      ),
+    actions: [
+      IconButton(
+        icon: const Icon(
+          Icons.search,
+          color: greenColor,
+        ),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => SearchScreen()),
+          );
+        },
+      ),
+    ],
+
+  );
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:rewear/screens/feed.dart';
 import 'package:rewear/screens/search_screen.dart';
 import 'package:rewear/utils/colors.dart';
 import 'package:rewear/utils/home_screen_items.dart';
@@ -47,9 +48,12 @@ class _WebScreenLayoutState extends State<WebScreenLayout> {
       appBar: AppBar(
         backgroundColor: coolGrey,
         centerTitle: false,
-        title: SvgPicture.asset(
-          'assets/ReWear.svg',
-          height: 100,
+        title: GestureDetector(
+          onTap: () => navigationTapped(0),
+          child: SvgPicture.asset(
+            'assets/ReWear.svg',
+            height: 100,
+          ),
         ),
         actions: [
           IconButton(
