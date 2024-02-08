@@ -38,6 +38,7 @@ class _ProductScreenState extends State<ProductScreen> {
       //loadSavedPosts();
     }
   }
+
   Future<void> fetchPostData() async {
     try {
       String postId = widget.snap?['postId'];
@@ -88,10 +89,16 @@ class _ProductScreenState extends State<ProductScreen> {
           ? null
           : AppBar(
               backgroundColor: coolGrey,
-              title: SvgPicture.asset(
-                'assets/ReWear.svg',
-                height: 100,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () => Navigator.of(context).pop(),
               ),
+              title: width > webScreenSize
+                  ? null
+                  : SvgPicture.asset(
+                      'assets/ReWear.svg',
+                      height: 100,
+                    ),
             ),
       body: postData == null
           ? Center(child: CircularProgressIndicator())
@@ -281,36 +288,41 @@ class _ProductScreenState extends State<ProductScreen> {
                     const SizedBox(height: 50),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [ FirebaseAuth.instance.currentUser!.uid == widget.snap!['uid']
-                          ? RateButton(text: postData != null &&
-                          postData!.containsKey('sold') &&
-                          postData!['sold'] == true
-                          ? 'Огласи повторно'
-                          : 'Продаден производ',                      function: () async {
-                      if (postData != null && postData!.containsKey('postId')) {
-                        await FireStoreMethods().markProductAsSold(postData!['postId']);
-                        Navigator.pop(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                ProfileScreen(uid: postData!['uid'].toString()),
-                          ),
-                        );
-                      }
-                      }
-                      )
-                          :RateButton(
-                          text: 'Контактирај продавач',
-                          function: () async {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    ChatScreen(userId: postData?['uid']),
+                      children: [
+                        FirebaseAuth.instance.currentUser!.uid ==
+                                widget.snap!['uid']
+                            ? RateButton(
+                                text: postData != null &&
+                                        postData!.containsKey('sold') &&
+                                        postData!['sold'] == true
+                                    ? 'Огласи повторно'
+                                    : 'Продаден производ',
+                                function: () async {
+                                  if (postData != null &&
+                                      postData!.containsKey('postId')) {
+                                    await FireStoreMethods()
+                                        .markProductAsSold(postData!['postId']);
+                                    Navigator.pop(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ProfileScreen(
+                                            uid: postData!['uid'].toString()),
+                                      ),
+                                    );
+                                  }
+                                })
+                            : RateButton(
+                                text: 'Контактирај продавач',
+                                function: () async {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ChatScreen(userId: postData?['uid']),
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          },
-                        ),
                       ],
                     ),
                   ],

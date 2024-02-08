@@ -19,36 +19,31 @@ Widget buildPostCard(BuildContext context, Map<String, dynamic> post) {
           ),
           child: (post['sold'] == true)
               ? Center(
-            child: Container(
-              decoration: BoxDecoration(
-                color:
-                Colors.black.withOpacity(0.5),
-              ),
-              padding: const EdgeInsets.all(8.0),
-              child: const Text(
-                'SOLD',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-            ),
-          )
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.5),
+                    ),
+                    padding: const EdgeInsets.all(8.0),
+                    child: const Text(
+                      'SOLD',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                )
               : Container(),
         ),
         GestureDetector(
-          onTap: () {
-            Future.delayed(Duration(seconds: 1), () async {
-              await Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProductScreen(
-                    snap: post,
-                  ),
-                ),
-              );
-            });
+          onTap: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProductScreen(snap: post),
+              ),
+            );
           },
         ),
         Container(

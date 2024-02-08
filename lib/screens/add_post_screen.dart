@@ -9,6 +9,9 @@ import 'package:provider/provider.dart';
 import 'package:rewear/providers/user_provider.dart';
 import 'package:rewear/model/user.dart';
 import 'package:rewear/resources/database_method.dart';
+import 'package:rewear/responsive/mobile_screen_layout.dart';
+import 'package:rewear/responsive/responsive_layout.dart';
+import 'package:rewear/responsive/web_screen_layout.dart';
 import 'package:rewear/screens/login_screen.dart';
 import 'package:rewear/screens/profile_screen.dart';
 import 'package:rewear/utils/colors.dart';
@@ -600,9 +603,17 @@ class _AddPostScreenState extends State<AddPostScreen> {
           _price = 0;
         });
 
+        // Navigator.of(context).pushReplacement(
+        //   MaterialPageRoute(
+        //       builder: (context) => ProfileScreen(uid: currentuser)),
+        // );
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-              builder: (context) => ProfileScreen(uid: currentuser)),
+            builder: (context) => const ResponsiveLayout(
+              mobileScreenLayout: MobileScreenLayout(),
+              webScreenLayout: WebScreenLayout(),
+            ),
+          ),
         );
       } else {
         showSnackBar(context, res);

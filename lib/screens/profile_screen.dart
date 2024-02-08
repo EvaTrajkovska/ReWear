@@ -138,7 +138,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-
   void showRatingDialog(BuildContext context) {
     final firestoreMethods = FireStoreMethods();
     int selectedRating = 0;
@@ -197,8 +196,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-
-
   double averageRating = 0;
   @override
   Widget build(BuildContext context) {
@@ -250,10 +247,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ? null
                 : AppBar(
                     backgroundColor: coolGrey,
-                title: SvgPicture.asset(
-                  'assets/ReWear.svg',
-                  height: 100,
-                ),
+                    title: SvgPicture.asset(
+                      'assets/ReWear.svg',
+                      height: 100,
+                    ),
                   ),
             body: SingleChildScrollView(
               child: Column(
@@ -323,53 +320,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  Column(
                     children: [
-                      FirebaseAuth.instance.currentUser!.uid == widget.uid
-                          ? RateButton(
-                              text: 'Види оцени',
-                              function: () async {
-                                showRaters(context);
-                              },
-                            )
-                          : RateButton(
-                              text: 'Оцени',
-                              function: () async {
-                                showRatingDialog(context);
-                              },
-                            )
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      FirebaseAuth.instance.currentUser!.uid == widget.uid
-                          ? RateButton(
-                              text: 'Одјави се',
-                              function: () async {
-                                await AuthenticationMethods().signOut();
-                                if (context.mounted) {
-                                  Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                      builder: (context) => const LoginScreen(),
-                                    ),
-                                  );
-                                }
-                              },
-                            )
-                          : RateButton(
-                              text: 'Контактирај продавач',
-                              function: () async {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        ChatScreen(userId: widget.uid),
-                                  ),
-                                );
-                              },
-                            ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          FirebaseAuth.instance.currentUser!.uid == widget.uid
+                              ? RateButton(
+                                  text: 'Види оцени',
+                                  function: () async {
+                                    showRaters(context);
+                                  },
+                                )
+                              : RateButton(
+                                  text: 'Оцени',
+                                  function: () async {
+                                    showRatingDialog(context);
+                                  },
+                                ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          FirebaseAuth.instance.currentUser!.uid == widget.uid
+                              ? RateButton(
+                                  text: 'Одјави се',
+                                  function: () async {
+                                    await signOutAndNavigateToLogin();
+                                  },
+                                )
+                              : RateButton(
+                                  text: 'Контактирај продавач',
+                                  function: () async {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ChatScreen(userId: widget.uid),
+                                      ),
+                                    );
+                                  },
+                                ),
+                        ],
+                      ),
                     ],
                   ),
                   Divider(),
@@ -422,7 +416,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   getData();
                                 });
                               },
-                                child: Container(
+                              child: Container(
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
                                     image: NetworkImage(snap['postUrl']),
@@ -456,5 +450,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               ),
             ));
+  }
+
+  Future signOutAndNavigateToLogin() async {
+    await AuthenticationMethods().signOut(); // Sign out from Firebase
+    await AuthenticationMethods().clearLocalUserData(); // Clear local user data
+    if (context.mounted) {
+      MaterialPageRoute(builder: (_) => LoginScreen());
+    }
   }
 }

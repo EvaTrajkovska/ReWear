@@ -7,6 +7,7 @@ import 'package:rewear/responsive/web_screen_layout.dart';
 import 'package:rewear/screens/signup_screen.dart';
 import 'package:rewear/service/notification_service.dart';
 import 'package:rewear/utils/dimensions.dart';
+import 'package:rewear/utils/imagePickerAndSnackBar.dart';
 import 'package:rewear/widgets/text_field_input.dart';
 
 import '../utils/colors.dart';
@@ -41,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
     await notifications.requestPermission();
     await notifications.getToken();
 
-    if (res == "succes") {
+    if (res == "success") {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
             builder: (context) => const ResponsiveLayout(
@@ -54,6 +55,8 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         _isLoading = false;
       });
+      print("error");
+      showSnackBar(context, res);
     }
   }
 

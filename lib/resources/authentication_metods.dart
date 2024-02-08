@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rewear/model/user.dart' as model;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthenticationMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -39,19 +41,18 @@ class AuthenticationMethods {
 
         // Create a new user object with isPremium status
         model.User user = model.User(
-          name: name,
-          surname: surname,
-          username: username,
-          email: email,
-          password: password, // Ensure secure handling of passwords
-          uid: cred.user!.uid,
-          followers: [],
-          following: [],
-          rating: [],
-          likes: [],
-          isPremium: isPremium,
-          soldItems: 0
-        );
+            name: name,
+            surname: surname,
+            username: username,
+            email: email,
+            password: password, // Ensure secure handling of passwords
+            uid: cred.user!.uid,
+            followers: [],
+            following: [],
+            rating: [],
+            likes: [],
+            isPremium: isPremium,
+            soldItems: 0);
 
         // Add the user to Firestore
         await _firestore
@@ -89,6 +90,11 @@ class AuthenticationMethods {
       res = err.toString();
     }
     return res;
+  }
+
+  Future<void> clearLocalUserData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
   }
 
   // Signs out the current user

@@ -74,7 +74,6 @@ class _SignupScreenState extends State<SignupScreen> {
       setState(() {
         _isLoading = false;
       });
-    } else {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => const ResponsiveLayout(
@@ -83,6 +82,18 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
         ),
       );
+    } else {
+      print("Error");
+      showSnackBar(context, res);
+
+      //  Navigator.of(context).pushReplacement(
+      //   MaterialPageRoute(
+      //     builder: (context) => const ResponsiveLayout(
+      //       mobileScreenLayout: MobileScreenLayout(),
+      //       webScreenLayout: WebScreenLayout(),
+      //     ),
+      //   ),
+      // );
     }
   }
 
@@ -109,93 +120,95 @@ class _SignupScreenState extends State<SignupScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: size.width * 0.08),
-    child: Container(
-    padding: MediaQuery.of(context).size.width > webScreenSize
-    ? EdgeInsets.symmetric(
-    horizontal: MediaQuery.of(context).size.width / 4)
-        : const EdgeInsets.symmetric(horizontal: 40),
-    width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: size.height * 0.02),
-              const Text(
-                'Креирај Профил',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 40,
-                  fontFamily: 'Helvetica',
-                  color: Color.fromRGBO(24, 29, 49, 1),
-                ),
-              ),
-              SizedBox(height: size.height * 0.05),
-              _buildTextField(
-                controller: _nameController,
-                hintText: 'Внеси име',
-                textInputType: TextInputType.text,
-              ),
-              SizedBox(height: size.height * 0.02),
-              _buildTextField(
-                controller: _surnameController,
-                hintText: 'Внеси Презиме',
-                textInputType: TextInputType.text,
-              ),
-              SizedBox(height: size.height * 0.02),
-              _buildTextField(
-                controller: _usernameController,
-                hintText: 'Внеси корисничко име',
-                textInputType: TextInputType.text,
-              ),
-              SizedBox(height: size.height * 0.02),
-              _buildTextField(
-                controller: _emailController,
-                hintText: 'Внеси email',
-                textInputType: TextInputType.emailAddress,
-              ),
-              SizedBox(height: size.height * 0.02),
-              _buildTextField(
-                controller: _passwordController,
-                hintText: 'Внеси лозинка',
-                textInputType: TextInputType.text,
-                isPass: true,
-              ),
-              SizedBox(height: size.height * 0.05),
-              InkWell(
-                onTap: signUpUser,
-                child: Container(
-                  width: double.infinity,
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(vertical: size.height * 0.015),
-                  decoration: const ShapeDecoration(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(4)),
-                    ),
+          child: Container(
+            padding: MediaQuery.of(context).size.width > webScreenSize
+                ? EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width / 4)
+                : const EdgeInsets.symmetric(horizontal: 40),
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: size.height * 0.02),
+                const Text(
+                  'Креирај Профил',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 40,
+                    fontFamily: 'Helvetica',
                     color: Color.fromRGBO(24, 29, 49, 1),
                   ),
+                ),
+                SizedBox(height: size.height * 0.05),
+                _buildTextField(
+                  controller: _nameController,
+                  hintText: 'Внеси име',
+                  textInputType: TextInputType.text,
+                ),
+                SizedBox(height: size.height * 0.02),
+                _buildTextField(
+                  controller: _surnameController,
+                  hintText: 'Внеси Презиме',
+                  textInputType: TextInputType.text,
+                ),
+                SizedBox(height: size.height * 0.02),
+                _buildTextField(
+                  controller: _usernameController,
+                  hintText: 'Внеси корисничко име',
+                  textInputType: TextInputType.text,
+                ),
+                SizedBox(height: size.height * 0.02),
+                _buildTextField(
+                  controller: _emailController,
+                  hintText: 'Внеси email',
+                  textInputType: TextInputType.emailAddress,
+                ),
+                SizedBox(height: size.height * 0.02),
+                _buildTextField(
+                  controller: _passwordController,
+                  hintText: 'Внеси лозинка',
+                  textInputType: TextInputType.text,
+                  isPass: true,
+                ),
+                SizedBox(height: size.height * 0.05),
+                InkWell(
+                  onTap: signUpUser,
+                  child: Container(
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    padding:
+                        EdgeInsets.symmetric(vertical: size.height * 0.015),
+                    decoration: const ShapeDecoration(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(4)),
+                      ),
+                      color: Color.fromRGBO(24, 29, 49, 1),
+                    ),
+                    child: const Text(
+                      'Креирај',
+                      style: TextStyle(color: Color.fromRGBO(241, 239, 239, 1)),
+                    ),
+                  ),
+                ),
+                SizedBox(height: size.height * 0.05),
+                GestureDetector(
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const LoginScreen(),
+                    ),
+                  ),
                   child: const Text(
-                    'Креирај',
-                    style: TextStyle(color: Color.fromRGBO(241, 239, 239, 1)),
+                    "Веќе имаш профил? Најави се",
+                    style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: size.height * 0.05),
-              GestureDetector(
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const LoginScreen(),
-                  ),
-                ),
-                child: const Text(
-                  "Веќе имаш профил? Најави се",
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),),
+              ],
+            ),
+          ),
         ),
       ),
     );
