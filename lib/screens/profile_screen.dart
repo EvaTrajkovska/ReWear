@@ -455,8 +455,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future signOutAndNavigateToLogin() async {
     await AuthenticationMethods().signOut(); // Sign out from Firebase
     await AuthenticationMethods().clearLocalUserData(); // Clear local user data
-    if (context.mounted) {
-      MaterialPageRoute(builder: (_) => LoginScreen());
-    }
+    // if (context.mounted) {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => LoginScreen()),
+      (Route<dynamic> route) => false,
+    );
+
+    // FirebaseAuth.instance.signOut().then((_) {
+    //   // Accessing provider to clear user data
+    //   Provider.of<UserProvider>(context, listen: false).clearUser();
+    // });
+    // Navigator.of(context).pushAndRemoveUntil(
+    //   MaterialPageRoute(builder: (context) => LoginScreen()),
+    //   (Route<dynamic> route) => false,
+    // );
   }
 }

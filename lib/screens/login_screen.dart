@@ -80,7 +80,6 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          // Wrap content in SingleChildScrollView
           child: Container(
             padding: MediaQuery.of(context).size.width > webScreenSize
                 ? EdgeInsets.symmetric(

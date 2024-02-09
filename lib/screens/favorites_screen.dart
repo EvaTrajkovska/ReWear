@@ -7,9 +7,7 @@ import 'package:rewear/widgets/small_box_card.dart';
 
 class SavedPostsScreen extends StatefulWidget {
   final String userId;
-
   const SavedPostsScreen({Key? key, required this.userId}) : super(key: key);
-
   @override
   _SavedPostsScreenState createState() => _SavedPostsScreenState();
 }
@@ -34,6 +32,18 @@ class _SavedPostsScreenState extends State<SavedPostsScreen> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final bool isWeb = width > webScreenSize;
+    final int crossAxisCount = width > 1500
+        ? 5
+        : width > 1200
+            ? 4
+            : width > 800
+                ? 3
+                : 2;
+    final double childAspectRatio = isWeb ? 1 : 0.7;
+    final double crossAxisSpacing = isWeb ? 20 : 8;
+    final double mainAxisSpacing = isWeb ? 20 : 10;
+
     return Scaffold(
       backgroundColor: width > webScreenSize ? coolGrey : mobileBackgroundColor,
       appBar: width > webScreenSize
@@ -51,7 +61,7 @@ class _SavedPostsScreenState extends State<SavedPostsScreen> {
             )
           : Column(children: [
               Divider(),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.symmetric(vertical: 16.0),
                 child: Text(
                   'Мои Омилени',
@@ -61,16 +71,16 @@ class _SavedPostsScreenState extends State<SavedPostsScreen> {
                 ),
               ),
               Divider(),
-              const SizedBox(
+              SizedBox(
                 height: 30,
               ),
               Expanded(
                 child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3, // Three cards per row
-                    crossAxisSpacing: 8.0, // Adjust as needed
-                    mainAxisSpacing: 10.0,
-                    childAspectRatio: 0.7, // Adjust as needed
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
+                    crossAxisSpacing: crossAxisSpacing,
+                    mainAxisSpacing: mainAxisSpacing,
+                    childAspectRatio: childAspectRatio,
                   ),
                   itemCount: savedPosts.length,
                   itemBuilder: (context, index) {

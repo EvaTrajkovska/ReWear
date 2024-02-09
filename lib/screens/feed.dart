@@ -14,7 +14,6 @@ class FeedScreen extends StatefulWidget {
 }
 
 class _FeedScreenState extends State<FeedScreen> {
-
   Map<String, Future<bool>> userPremiumStatusCache = {};
   final ScrollController regularPostsController = ScrollController();
   final ScrollController premiumPostsController = ScrollController();
@@ -45,18 +44,79 @@ class _FeedScreenState extends State<FeedScreen> {
     for (var post in allPosts) {
       var isPremium = await _checkIfUserIsPremium(post['uid']);
       var isSold = post['sold'] ?? false;
-      if(!isSold){
-      if (isPremium) {
-        premiumPosts.add(post);
-      } else {
-        regularPosts.add(post);
-    }
-     }
+      if (!isSold) {
+        if (isPremium) {
+          premiumPosts.add(post);
+        } else {
+          regularPosts.add(post);
+        }
+      }
     }
   }
 
-  Widget _buildPostGrid(List<DocumentSnapshot> posts, bool isPremiumList,
-      BuildContext context, ScrollController controller, String headerText) {
+  // Widget _buildPostGrid(List<DocumentSnapshot> posts, bool isPremiumList,
+  //     BuildContext context, ScrollController controller, String headerText) {
+  //   return Column(
+  //     children: [
+  //       Padding(
+  //         padding: EdgeInsets.all(8.0),
+  //         child: Center(
+  //           child: Text(
+  //             headerText,
+  //             style: const TextStyle(
+  //                 fontSize: 24, color: greenColor, fontWeight: FontWeight.bold),
+  //           ),
+  //         ),
+  //       ),
+  //       Expanded(
+  //         child: CustomScrollView(
+  //           controller: controller,
+  //           slivers: [
+  //             SliverGrid(
+  //               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+  //                 crossAxisCount: 3,
+  //                 childAspectRatio: 0.7,
+  //               ),
+  //               delegate: SliverChildBuilderDelegate(
+  //                 (BuildContext context, int index) {
+  //                   return FutureBuilder<bool>(
+  //                     future: _checkIfUserIsPremium(posts[index]['uid']),
+  //                     builder: (context, AsyncSnapshot<bool> snapshot) {
+  //                       if (snapshot.connectionState ==
+  //                           ConnectionState.waiting) {
+  //                         return Container();
+  //                       }
+  //                       var data = posts[index].data() as Map<String, dynamic>?;
+  //                       if (snapshot.data == isPremiumList && data != null) {
+  //                         return buildPostCard(context, data);
+  //                       } else {
+  //                         return Container();
+  //                       }
+  //                     },
+  //                   );
+  //                 },
+  //                 childCount: posts.length,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+  Widget _buildPostGrid(
+    List<DocumentSnapshot> posts,
+    bool isPremiumList,
+    BuildContext context,
+    ScrollController controller,
+    String headerText,
+  ) {
+    // Assuming a width threshold for 'web' is anything wider than 600 pixels.
+    final isWeb = MediaQuery.of(context).size.width > 600;
+    final crossAxisCountWeb =
+        5; // You can increase this number to make boxes smaller
+    final crossAxisCountMobile = 3;
+
     return Column(
       children: [
         Padding(
@@ -65,55 +125,43 @@ class _FeedScreenState extends State<FeedScreen> {
             child: Text(
               headerText,
               style: const TextStyle(
-                  fontSize: 24, color: greenColor, fontWeight: FontWeight.bold),
+                fontSize: 24,
+                color: greenColor,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),
         Expanded(
-          child: CustomScrollView(
+          child: GridView.builder(
             controller: controller,
-            slivers: [
-              SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  childAspectRatio: 0.7,
-                ),
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                    return FutureBuilder<bool>(
-                      future: _checkIfUserIsPremium(posts[index]['uid']),
-                      builder: (context, AsyncSnapshot<bool> snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Container();
-                        }
-                        var data = posts[index].data() as Map<String, dynamic>?;
-                        if (snapshot.data == isPremiumList && data != null) {
-                          return buildPostCard(context, data);
-                        } else {
-                          return Container();
-                        }
-                      },
-                    );
-                  },
-                  childCount: posts.length,
-                ),
-              ),
-            ],
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: isWeb ? crossAxisCountWeb : crossAxisCountMobile,
+              childAspectRatio:
+                  isWeb ? 1 : 0.7, // Adjust ratio for web if needed
+              crossAxisSpacing:
+                  isWeb ? 8 : 4, // Adjust spacing for web if needed
+              mainAxisSpacing:
+                  isWeb ? 8 : 4, // Adjust spacing for web if needed
+            ),
+            itemCount: posts.length,
+            itemBuilder: (BuildContext context, int index) {
+              var data = posts[index].data() as Map<String, dynamic>?;
+              return buildPostCard(context, data!);
+            },
           ),
         ),
       ],
     );
   }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: width > webScreenSize ? coolGrey : mobileBackgroundColor,
-      appBar: width > webScreenSize
-          ? null
-          : _buildAppBar(),
+      appBar: width > webScreenSize ? null : _buildAppBar(),
       body: Container(
         margin: EdgeInsets.symmetric(
           horizontal: width > webScreenSize ? width * 0.15 : 0,
@@ -144,9 +192,13 @@ class _FeedScreenState extends State<FeedScreen> {
                 return Column(
                   children: [
                     Expanded(
-
-                      child: _buildPostGrid(regularPosts, false, context,
-                          regularPostsController, 'Избрани за тебе',),
+                      child: _buildPostGrid(
+                        regularPosts,
+                        false,
+                        context,
+                        regularPostsController,
+                        'Избрани за тебе',
+                      ),
                     ),
                     Expanded(
                       child: _buildPostGrid(premiumPosts, true, context,
@@ -161,26 +213,26 @@ class _FeedScreenState extends State<FeedScreen> {
       ),
     );
   }
-  AppBar _buildAppBar() => AppBar(
-    backgroundColor: mobileBackgroundColor,
-    title:  SvgPicture.asset(
-        'assets/ReWear.svg',
-        height: 100,
-      ),
-    actions: [
-      IconButton(
-        icon: const Icon(
-          Icons.search,
-          color: greenColor,
-        ),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => SearchScreen()),
-          );
-        },
-      ),
-    ],
 
-  );
+  AppBar _buildAppBar() => AppBar(
+        backgroundColor: mobileBackgroundColor,
+        title: SvgPicture.asset(
+          'assets/ReWear.svg',
+          height: 100,
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.search,
+              color: greenColor,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SearchScreen()),
+              );
+            },
+          ),
+        ],
+      );
 }
